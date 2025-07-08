@@ -1,0 +1,107 @@
+# Project Startup & Common Development Commands
+
+**Note:** All commands below are written to be run from the project root (`/Users/sojanvarghese/Documents/ai/webhooks`). You can run them from anywhere by using the full relative path.
+
+## Start Servers
+- Start Rails backend:
+  ```sh
+  (cd webhooks-backend && rails server -p 3001)
+  ```
+- Start React frontend:
+  ```sh
+  (cd webhooks-frontend && npm start)
+  ```
+- Visit the app at: [http://localhost:3000](http://localhost:3000)
+
+## Common Commands
+- **Install backend dependencies:**
+  ```sh
+  (cd webhooks-backend && bundle install)
+  ```
+- **Install frontend dependencies:**
+  ```sh
+  (cd webhooks-frontend && yarn install)
+  # or
+  (cd webhooks-frontend && npm install)
+  ```
+- **Run backend migrations:**
+  ```sh
+  (cd webhooks-backend && rails db:create db:migrate)
+  ```
+- **Stop Rails server (if stuck):**
+  ```sh
+  kill -9 $(cat webhooks-backend/tmp/pids/server.pid)
+  ```
+- **Build frontend for production:**
+  ```sh
+  (cd webhooks-frontend && npm run build)
+  ```
+- **Run frontend tests:**
+  ```sh
+  (cd webhooks-frontend && npm test)
+  ```
+- **Run backend tests:**
+  ```sh
+  (cd webhooks-backend && bundle exec rspec)
+  # or
+  (cd webhooks-backend && rails test)
+  ```
+
+---
+
+> These commands are always available for quick reference and should be used for local development and troubleshooting. They are safe to run from any directory within the project.
+# Project Startup & Common Development Commands
+
+**Note:** All commands below are written to be run from the project root (`/Users/sojanvarghese/Documents/ai/webhooks`). You can run them from anywhere by using the full relative path.
+
+## Start Servers
+- Start Rails backend:
+  ```sh
+  (cd webhooks-backend && rails server -p 3001)
+  ```
+- Start React frontend:
+  ```sh
+  (cd webhooks-frontend && npm start)
+  ```
+- Visit the app at: [http://localhost:3000](http://localhost:3000)
+
+## Common Commands
+- **Install backend dependencies:**
+  ```sh
+  (cd webhooks-backend && bundle install)
+  ```
+- **Install frontend dependencies:**
+  ```sh
+  (cd webhooks-frontend && yarn install)
+  # or
+  (cd webhooks-frontend && npm install)
+  ```
+- **Run backend migrations:**
+  ```sh
+  (cd webhooks-backend && rails db:create db:migrate)
+  ```
+- **Stop Rails server (if stuck):**
+  ```sh
+  kill -9 $(cat webhooks-backend/tmp/pids/server.pid)
+  ```
+- **Build frontend for production:**
+  ```sh
+  (cd webhooks-frontend && npm run build)
+  ```
+- **Run frontend tests:**
+  ```sh
+  (cd webhooks-frontend && npm test)
+  ```
+- **Run backend tests:**
+  ```sh
+  (cd webhooks-backend && bundle exec rspec)
+  # or
+  (cd webhooks-backend && rails test)
+  ```
+
+
+> These commands are always available for quick reference and should be used for local development and troubleshooting. They are safe to run from any directory within the project.
+description:
+globs:
+alwaysApply: true
+---

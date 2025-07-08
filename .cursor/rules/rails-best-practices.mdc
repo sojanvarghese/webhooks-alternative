@@ -1,0 +1,22 @@
+# Ruby on Rails Best Practices Rule
+
+- **Fat Model, Skinny Controller:** Place business logic, data manipulation, and validations in models. Keep controllers focused on request/response and routing ([source](https://blog.joshsoftware.com/2023/10/11/ruby-on-rails-best-practices/)).
+- **Eager Loading:** Use `includes` or `preload` to avoid N+1 queries when loading associations. Only eager load what you need ([source](https://blog.joshsoftware.com/2023/10/11/ruby-on-rails-best-practices/)).
+- **Model Validations vs Database Validations:** Use model validations for business rules and database constraints for data integrity ([source](https://blog.joshsoftware.com/2023/10/11/ruby-on-rails-best-practices/)).
+- **Prevent SQL Injection:** Always use parameterized queries and ActiveRecord query methods. Never interpolate user input directly into SQL ([source](https://blog.joshsoftware.com/2023/10/11/ruby-on-rails-best-practices/)).
+- **Use Scopes:** Use named scopes for reusable query logic ([source](https://learnetto.com/tutorials/ruby-on-rails-best-practices)).
+- **Use Callbacks Carefully:** Prefer service objects or model methods for complex logic instead of overusing callbacks ([source](https://learnetto.com/tutorials/ruby-on-rails-best-practices)).
+- **Keep Code DRY:** Avoid code duplication by using helpers, concerns, and partials ([source](https://www.codementor.io/ruby-on-rails/tutorial/6-ruby-best-practices-beginners-should-know)).
+- **Use Strong Parameters:** Always use strong parameters in controllers to whitelist attributes ([source](https://www.codementor.io/ruby-on-rails/tutorial/6-ruby-best-practices-beginners-should-know)).
+- **Use RESTful Routes:** Follow RESTful conventions for controllers and routes ([source](https://learnetto.com/tutorials/ruby-on-rails-best-practices)).
+- **Write Tests:** Write model, controller, and integration tests for all features ([source](https://www.codementor.io/ruby-on-rails/tutorial/6-ruby-best-practices-beginners-should-know)).
+- **Use Environment Variables:** Store secrets and configuration in environment variables, not in code ([source](https://www.codementor.io/ruby-on-rails/tutorial/6-ruby-best-practices-beginners-should-know)).
+
+References:
+- [Josh Software: Ruby on Rails Best Practices](https://blog.joshsoftware.com/2023/10/11/ruby-on-rails-best-practices/)
+- [Learnetto: Ruby on Rails Best Practices](https://learnetto.com/tutorials/ruby-on-rails-best-practices)
+- [Codementor: 6 Ruby Best Practices Beginners Should Know](https://www.codementor.io/ruby-on-rails/tutorial/6-ruby-best-practices-beginners-should-know)
+description: Ruby on rails best practice rules
+globs:
+alwaysApply: true
+---

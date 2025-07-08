@@ -1,0 +1,434 @@
+---
+alwaysApply: true
+---
+
+# General rule for all directories
+general:
+  - description: >
+      Cursor must autonomously interpret the user's prompt and produce the best possible solution
+      based on full awareness of the project's architecture and technologies (React + Ruby on Rails),
+      without requiring further input or clarification. Solutions should reflect deep contextual reasoning.
+
+# Directory-specific rules
+directories:
+  webhooks-frontend:
+    - description: >
+        All solutions must be tailored to a React environment using modern best practices
+        (e.g., functional components, hooks, modular CSS, code splitting). Ensure UI logic,
+        state management, and API integration follow established frontend conventions.
+
+  webhooks-backend:
+    - description: >
+        All solutions must follow Ruby on Rails conventions (MVC architecture, RESTful routing,
+        strong parameters, concerns, ActiveRecord best practices). Backend logic should be
+        secure, scalable, and maintainable.
+
+# Additional general rules
+additional_rules:
+  - description: >
+      Maintain a consistent and idiomatic coding style across both frontend and backend
+      to ensure a cohesive, professional-quality codebase.
+
+  - description: >
+      Provide secure, performant, and scalable webhook implementations. Address
+      potential threats (e.g., replay attacks, request validation, rate limiting),
+      and recommend best practices for delivery retries and logging.
+
+  - description: >
+      Cursor must always think across both systems (frontend/backend) to ensure integration
+      points such as API calls, request/response schemas, and error handling are consistent
+      and fully functional.
+
+# Systematic Error Detection and Resolution
+error_detection:
+  - description: >
+      When asked to fix compile-time or runtime errors, follow this systematic approach:
+      1. Use codebase_search to identify potential error sources
+      2. Run build/compile commands to identify specific issues
+      3. Check dependencies and configurations
+      4. Test API endpoints and integrations
+      5. Verify database migrations and models
+      6. Fix issues in order of severity (blocking errors first)
+      7. Use Playwright MCP for UI testing and runtime error detection
+
+  - description: >
+      For React frontend compile-time errors, specifically check for:
+      - React Hooks dependency arrays (useEffect, useCallback, useMemo)
+      - Component prop types and validation
+      - Import/export statements and module resolution
+      - ESLint warnings about style props, duplicate props, unused variables
+      - TypeScript type errors (if applicable)
+      - CSS import paths and asset references
+      - neetoUI component props (use 'as' not 'style', 'variant' not 'style', 'rows' not 'minRows/maxRows')
+
+  - description: >
+      For Rails backend runtime errors, specifically check for:
+      - Request body parsing (avoid reading request.body multiple times)
+      - JSON parsing errors and malformed data handling
+      - Database connection and migration status
+      - CORS configuration for cross-origin requests
+      - Route definitions and controller actions
+      - Model validations and associations
+      - Gem dependencies and version conflicts
+
+  - description: >
+      For cross-system integration errors, verify:
+      - API endpoint URLs and port configurations
+      - Request/response data formats and schemas
+      - Authentication and authorization flows
+      - Error handling and user feedback mechanisms
+      - Network connectivity and CORS policies
+
+  - description: >
+      Always test fixes by running build commands and API tests:
+      - Frontend: 'npm run build' to check for compile-time errors
+      - Backend: 'rails routes' and 'rails db:migrate:status' for configuration
+      - Integration: Use curl commands to test API endpoints
+      - Verify both servers start without errors
+      - Use Playwright MCP for end-to-end UI testing
+
+# Playwright MCP Testing Strategy
+playwright_testing:
+  - description: >
+      When asked to check UI functionality, fix UI errors, or verify the application works correctly,
+      use Playwright MCP tools in this systematic order:
+      1. Navigate to the application URL (e.g., http://localhost:3000)
+      2. Take a screenshot to verify UI renders correctly
+      3. Check console messages for JavaScript errors
+      4. Test core functionality through browser interactions
+      5. Verify error-free operation and user experience
+
+  - description: >
+      Playwright MCP Console Error Detection:
+      - Use mcp_playwright_browser_console_messages to identify JavaScript errors
+      - Look for React component errors (undefined imports, invalid props)
+      - Check for network request failures and API errors
+      - Identify CSS loading issues and missing resources
+      - Verify browser API compatibility (clipboard, localStorage, etc.)
+
+  - description: >
+      Playwright MCP UI Testing Best Practices:
+      - Always navigate to the application before testing
+      - Take screenshots to document UI state and verify visual correctness
+      - Test interactive elements (buttons, forms, inputs) with browser actions
+      - Verify responsive design and component rendering
+      - Check for accessibility issues and proper semantic HTML
+      - Test error scenarios and edge cases
+
+  - description: >
+      Common UI Issues Detected with Playwright MCP:
+      - Components importing as 'undefined' instead of actual component
+      - Invalid props causing React warnings (style vs as, minRows vs rows)
+      - CSS import path issues causing blank screens
+      - JavaScript errors preventing component rendering
+      - Network request failures in browser console
+      - Missing error boundaries and unhandled exceptions
+
+# Analysis and error detection
+analysis:
+  - description: >
+      Perform deep code analysis to proactively identify and avoid potential runtime and
+      compile-time issues. This includes syntax errors, type mismatches, undefined variables,
+      improper API usage, and insecure logic.
+
+  - description: >
+      Leverage static and semantic code analysis tools internally to validate correctness.
+      Detect dependency issues, deprecations, and conflicts between packages or gems.
+
+  - description: >
+      Encourage defensive programming techniques, including input validation, exception
+      handling, and meaningful logging. Ensure error boundaries and fallback behaviors are in place.
+
+  - description: |
+      Automatically respond to feature prompts by providing step-by-step solutions without seeking confirmation or opinions unless absolutely necessary. Cursor should independently analyze the prompt and select the best possible implementation.
+    paths:
+      - "webhooks-frontend/**/*"
+      - "webhooks-backend/**/*"
+
+  - description: |
+      Thoroughly analyze the existing codebase before making any changes. This includes understanding the current architecture, dependencies, and any potential impacts of the changes on the overall system.
+    paths:
+      - "webhooks-frontend/**/*"
+      - "webhooks-backend/**/*"
+
+  - description: |
+      Ensure that all implementations are free from compile-time and runtime errors. Use static analysis and testing strategies to proactively identify and resolve potential issues.
+    paths:
+      - "webhooks-frontend/**/*"
+      - "webhooks-backend/**/*"
+
+  - description: |
+      Follow idiomatic and scalable coding practices for both React and Ruby on Rails. Ensure that the code is maintainable, performant, and adheres to the best practices specific to each technology stack.
+    paths:
+      - "webhooks-frontend/**/*"
+      - "webhooks-backend/**/*"
+
+# Common Error Patterns and Solutions
+common_fixes:
+  - description: >
+      React/Frontend Common Fixes:
+      - Replace Typography style="h2" with as="h2" for neetoUI components
+      - Replace Button style="primary" with variant="primary" for neetoUI components
+      - Replace Textarea minRows/maxRows with rows prop
+      - Fix undefined component imports (check import statements and component exports)
+      - Wrap functions in useCallback when used in useEffect dependencies
+      - Add try-catch blocks around browser APIs (clipboard, localStorage, etc.)
+      - Use proper import paths for CSS and component files
+      - Move CSS imports to index.js if causing webpack compilation issues
+
+  - description: >
+      Rails/Backend Common Fixes:
+      - Read request.body only once, store in variable for reuse
+      - Add proper JSON parsing error handling with rescue blocks
+      - Include required gems for Ruby version compatibility (e.g., ostruct)
+      - Configure CORS properly for cross-origin requests
+      - Use strong parameters for controller actions
+      - Add proper error responses with appropriate HTTP status codes
+
+  - description: >
+      Integration Common Fixes:
+      - Ensure consistent API endpoint URLs between frontend and backend
+      - Match request/response data structures and field names
+      - Handle network errors gracefully with user-friendly messages
+      - Implement proper loading states and error boundaries
+      - Test all API endpoints with curl commands before frontend integration
+
+  - description: >
+      neetoUI Component Common Fixes:
+      - Typography: Use 'as' prop instead of 'style' prop (as="h1" not style="h1")
+      - Button: Use 'variant' prop instead of 'style' prop (variant="primary" not style="primary")
+      - Textarea: Use 'rows' prop instead of 'minRows'/'maxRows' props
+      - Import components correctly from @bigbinary/neetoui
+      - Ensure CSS is imported properly in index.js, not App.js
+      - Replace problematic neetoUI components with native HTML elements if needed
+
+# UI Testing and Validation
+ui_validation:
+  - description: >
+      When implementing UI features or fixing UI issues:
+      1. Ensure servers are running (frontend on :3000, backend on :3001)
+      2. Use Playwright MCP to navigate and test the application
+      3. Verify zero console errors and proper component rendering
+      4. Test all interactive functionality (forms, buttons, navigation)
+      5. Confirm responsive design and professional appearance
+      6. Validate error handling and user feedback mechanisms
+
+      - Match request/response data structures and field names
+      - Handle network errors gracefully with user-friendly messages
+      - Implement proper loading states and error boundaries
+             - Test all API endpoints with curl commands before frontend integration
+# General rule for all directories
+general:
+  - description: >
+      Cursor must autonomously interpret the user's prompt and produce the best possible solution
+      based on full awareness of the project's architecture and technologies (React + Ruby on Rails),
+      without requiring further input or clarification. Solutions should reflect deep contextual reasoning.
+
+# Directory-specific rules
+directories:
+  webhooks-frontend:
+    - description: >
+        All solutions must be tailored to a React environment using modern best practices
+        (e.g., functional components, hooks, modular CSS, code splitting). Ensure UI logic,
+        state management, and API integration follow established frontend conventions.
+
+  webhooks-backend:
+    - description: >
+        All solutions must follow Ruby on Rails conventions (MVC architecture, RESTful routing,
+        strong parameters, concerns, ActiveRecord best practices). Backend logic should be
+        secure, scalable, and maintainable.
+
+# Additional general rules
+additional_rules:
+  - description: >
+      Maintain a consistent and idiomatic coding style across both frontend and backend
+      to ensure a cohesive, professional-quality codebase.
+
+  - description: >
+      Provide secure, performant, and scalable webhook implementations. Address
+      potential threats (e.g., replay attacks, request validation, rate limiting),
+      and recommend best practices for delivery retries and logging.
+
+  - description: >
+      Cursor must always think across both systems (frontend/backend) to ensure integration
+      points such as API calls, request/response schemas, and error handling are consistent
+      and fully functional.
+
+# Systematic Error Detection and Resolution
+error_detection:
+  - description: >
+      When asked to fix compile-time or runtime errors, follow this systematic approach:
+      1. Use codebase_search to identify potential error sources
+      2. Run build/compile commands to identify specific issues
+      3. Check dependencies and configurations
+      4. Test API endpoints and integrations
+      5. Verify database migrations and models
+      6. Fix issues in order of severity (blocking errors first)
+      7. Use Playwright MCP for UI testing and runtime error detection
+
+  - description: >
+      For React frontend compile-time errors, specifically check for:
+      - React Hooks dependency arrays (useEffect, useCallback, useMemo)
+      - Component prop types and validation
+      - Import/export statements and module resolution
+      - ESLint warnings about style props, duplicate props, unused variables
+      - TypeScript type errors (if applicable)
+      - CSS import paths and asset references
+      - neetoUI component props (use 'as' not 'style', 'variant' not 'style', 'rows' not 'minRows/maxRows')
+
+  - description: >
+      For Rails backend runtime errors, specifically check for:
+      - Request body parsing (avoid reading request.body multiple times)
+      - JSON parsing errors and malformed data handling
+      - Database connection and migration status
+      - CORS configuration for cross-origin requests
+      - Route definitions and controller actions
+      - Model validations and associations
+      - Gem dependencies and version conflicts
+
+  - description: >
+      For cross-system integration errors, verify:
+      - API endpoint URLs and port configurations
+      - Request/response data formats and schemas
+      - Authentication and authorization flows
+      - Error handling and user feedback mechanisms
+      - Network connectivity and CORS policies
+
+  - description: >
+      Always test fixes by running build commands and API tests:
+      - Frontend: 'npm run build' to check for compile-time errors
+      - Backend: 'rails routes' and 'rails db:migrate:status' for configuration
+      - Integration: Use curl commands to test API endpoints
+      - Verify both servers start without errors
+      - Use Playwright MCP for end-to-end UI testing
+
+# Playwright MCP Testing Strategy
+playwright_testing:
+  - description: >
+      When asked to check UI functionality, fix UI errors, or verify the application works correctly,
+      use Playwright MCP tools in this systematic order:
+      1. Navigate to the application URL (e.g., http://localhost:3000)
+      2. Take a screenshot to verify UI renders correctly
+      3. Check console messages for JavaScript errors
+      4. Test core functionality through browser interactions
+      5. Verify error-free operation and user experience
+
+  - description: >
+      Playwright MCP Console Error Detection:
+      - Use mcp_playwright_browser_console_messages to identify JavaScript errors
+      - Look for React component errors (undefined imports, invalid props)
+      - Check for network request failures and API errors
+      - Identify CSS loading issues and missing resources
+      - Verify browser API compatibility (clipboard, localStorage, etc.)
+
+  - description: >
+      Playwright MCP UI Testing Best Practices:
+      - Always navigate to the application before testing
+      - Take screenshots to document UI state and verify visual correctness
+      - Test interactive elements (buttons, forms, inputs) with browser actions
+      - Verify responsive design and component rendering
+      - Check for accessibility issues and proper semantic HTML
+      - Test error scenarios and edge cases
+
+  - description: >
+      Common UI Issues Detected with Playwright MCP:
+      - Components importing as 'undefined' instead of actual component
+      - Invalid props causing React warnings (style vs as, minRows vs rows)
+      - CSS import path issues causing blank screens
+      - JavaScript errors preventing component rendering
+      - Network request failures in browser console
+      - Missing error boundaries and unhandled exceptions
+
+# Analysis and error detection
+analysis:
+  - description: >
+      Perform deep code analysis to proactively identify and avoid potential runtime and
+      compile-time issues. This includes syntax errors, type mismatches, undefined variables,
+      improper API usage, and insecure logic.
+
+  - description: >
+      Leverage static and semantic code analysis tools internally to validate correctness.
+      Detect dependency issues, deprecations, and conflicts between packages or gems.
+
+  - description: >
+      Encourage defensive programming techniques, including input validation, exception
+      handling, and meaningful logging. Ensure error boundaries and fallback behaviors are in place.
+
+  - description: |
+      Automatically respond to feature prompts by providing step-by-step solutions without seeking confirmation or opinions unless absolutely necessary. Cursor should independently analyze the prompt and select the best possible implementation.
+    paths:
+      - "webhooks-frontend/**/*"
+      - "webhooks-backend/**/*"
+
+  - description: |
+      Thoroughly analyze the existing codebase before making any changes. This includes understanding the current architecture, dependencies, and any potential impacts of the changes on the overall system.
+    paths:
+      - "webhooks-frontend/**/*"
+      - "webhooks-backend/**/*"
+
+  - description: |
+      Ensure that all implementations are free from compile-time and runtime errors. Use static analysis and testing strategies to proactively identify and resolve potential issues.
+    paths:
+      - "webhooks-frontend/**/*"
+      - "webhooks-backend/**/*"
+
+  - description: |
+      Follow idiomatic and scalable coding practices for both React and Ruby on Rails. Ensure that the code is maintainable, performant, and adheres to the best practices specific to each technology stack.
+    paths:
+      - "webhooks-frontend/**/*"
+      - "webhooks-backend/**/*"
+
+# Common Error Patterns and Solutions
+common_fixes:
+  - description: >
+      React/Frontend Common Fixes:
+      - Replace Typography style="h2" with as="h2" for neetoUI components
+      - Replace Button style="primary" with variant="primary" for neetoUI components
+      - Replace Textarea minRows/maxRows with rows prop
+      - Fix undefined component imports (check import statements and component exports)
+      - Wrap functions in useCallback when used in useEffect dependencies
+      - Add try-catch blocks around browser APIs (clipboard, localStorage, etc.)
+      - Use proper import paths for CSS and component files
+      - Move CSS imports to index.js if causing webpack compilation issues
+
+  - description: >
+      Rails/Backend Common Fixes:
+      - Read request.body only once, store in variable for reuse
+      - Add proper JSON parsing error handling with rescue blocks
+      - Include required gems for Ruby version compatibility (e.g., ostruct)
+      - Configure CORS properly for cross-origin requests
+      - Use strong parameters for controller actions
+      - Add proper error responses with appropriate HTTP status codes
+
+  - description: >
+      Integration Common Fixes:
+      - Ensure consistent API endpoint URLs between frontend and backend
+      - Match request/response data structures and field names
+      - Handle network errors gracefully with user-friendly messages
+      - Implement proper loading states and error boundaries
+      - Test all API endpoints with curl commands before frontend integration
+
+  - description: >
+      neetoUI Component Common Fixes:
+      - Typography: Use 'as' prop instead of 'style' prop (as="h1" not style="h1")
+      - Button: Use 'variant' prop instead of 'style' prop (variant="primary" not style="primary")
+      - Textarea: Use 'rows' prop instead of 'minRows'/'maxRows' props
+      - Import components correctly from @bigbinary/neetoui
+      - Ensure CSS is imported properly in index.js, not App.js
+      - Replace problematic neetoUI components with native HTML elements if needed
+
+# UI Testing and Validation
+ui_validation:
+  - description: >
+      When implementing UI features or fixing UI issues:
+      1. Ensure servers are running (frontend on :3000, backend on :3001)
+      2. Use Playwright MCP to navigate and test the application
+      3. Verify zero console errors and proper component rendering
+      4. Test all interactive functionality (forms, buttons, navigation)
+      5. Confirm responsive design and professional appearance
+      6. Validate error handling and user feedback mechanisms
+
+      - Match request/response data structures and field names
+      - Handle network errors gracefully with user-friendly messages
+      - Implement proper loading states and error boundaries
+             - Test all API endpoints with curl commands before frontend integration
