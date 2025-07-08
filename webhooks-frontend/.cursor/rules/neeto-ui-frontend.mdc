@@ -1,0 +1,59 @@
+# Neeto UI/UX Frontend Rules
+
+## General UI Patterns
+- Use sentence case for all UI text (headings, buttons, labels, etc.) across the application.
+- Prefer Spinner for loading small sections and PageLoader for full-page loading states. Choose the right indicator for the context.
+- Use Modals for critical, interruptive actions and Panes for workflows or side content. Do not mix their purposes.
+- Always use neetoUI Button components for actions. Avoid using raw <button> unless absolutely necessary.
+- Use Toastr for notifications. For error toasts, disable auto-close to ensure users see the message.
+- Use TableWrapper for tables to avoid dynamic height computation issues.
+- Place the three-dot menu (more actions) as the first column in tables, not at the end.
+- For delete actions, maintain consistency in placement and confirmation patterns.
+
+## Styling and Theming
+- Do not use hex values for colors. Always use theme variables or neetoUI-provided classes.
+- Do not use Tailwind for theming or core styles; use neetoUI and its variables.
+- Use BEM naming convention for custom CSS classes.
+- Remove font-smoothing: antialiased to improve text contrast.
+- Ensure ideal line length for readability in text-heavy components.
+
+## Accessibility
+- Use semantic HTML for structure and text (e.g., <main>, <header>, <nav>, <section>, <article>, <h1>-<h6>, <p>, etc.).
+- All form elements must have associated labels.
+- All images must have meaningful alt text.
+- Ensure all interactive elements (buttons, links) have accessible names.
+- Use tabindex only for accessibility, and avoid tabindex > 0.
+- Arrange DOM elements in a logical order for keyboard navigation.
+- Use aria- attributes where necessary for screen readers.
+
+## Component Usage
+- Use neetoUI Typography for all text, specifying the correct style prop (e.g., style="h2").
+- Use neetoUI Input and Select components for forms, and control width using their props, not custom CSS.
+- For overlays (Modals/Panes), ensure autoFocus is set on the primary input field.
+- Use neetoUI Table for tabular data, and follow Neeto's table patterns for actions and layouts.
+
+## Interaction Patterns
+- Enter or Command + Enter should submit forms.
+- For links, ensure they are clear and predictable; avoid ambiguous link texts.
+- Use confirmation modals for destructive actions.
+- For bulk actions in tables, follow Neeto's bulk action patterns.
+
+## Error Handling
+- Use Toastr for error messages and disable auto-close for errors.
+- Show inline error messages near the relevant field in forms.
+
+## Dark Mode
+- If supporting dark mode, use only neetoUI's dark mode classes and variables.
+
+## Best Practices
+- Minimize custom CSS; prefer neetoUI props and classes.
+- Use SCSS 7-1 pattern for organizing custom styles if needed.
+- Use variables, mixins, and extends for any custom SCSS.
+
+---
+
+For more details or examples, refer to the [Neeto UI/UX documentation](https://neetix.neetokb.com/) and [Cursor Rules documentation](https://docs.cursor.com/context/rules).
+description: Neeto UI/UX rules
+globs:
+alwaysApply: true
+---

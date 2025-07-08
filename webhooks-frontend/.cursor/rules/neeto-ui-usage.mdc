@@ -1,0 +1,17 @@
+# neetoUI Usage Rule for Frontend
+
+- Always use neetoUI React components for UI elements (buttons, inputs, typography, modals, panes, tables, etc.) wherever possible.
+- Always import and use neetoUI's CSS (`@bigbinary/neetoui/dist/index.css`).
+- Always use neetoUI-provided color variables (e.g., `var(--neeto-ui-primary-500)`, `var(--neeto-ui-white)`) for backgrounds, text, and borders. Do not use hardcoded hex, rgb, or custom color values for UI elements.
+- Do not use custom or third-party UI libraries for core UI (e.g., do not use Material UI, Ant Design, Bootstrap, etc. for new UI).
+- Minimize custom CSS. If custom CSS is needed, use BEM naming and only for layout or non-core UI.
+- Do not use Tailwind for theming or core UI.
+- Do not use custom font families or font sizes; use neetoUI Typography and its props.
+- Use neetoUI spacing, border radius, and shadow variables for layout and effects.
+- Exclude translations (i18n) from this rule.
+
+For reference, see the [neetoUI documentation](https://neeto-ui.neeto.com/?path=/docs/welcome--docs).
+description: NeetoUI usage Rules
+globs:
+alwaysApply: true
+---
