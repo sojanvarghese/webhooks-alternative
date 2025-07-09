@@ -50,7 +50,7 @@ const backendProcess = spawnProcess(
 
 // Start frontend (build and serve static files)
 console.log("🌐 Building and starting React frontend...");
-const frontendProcess = spawnProcess("npm", ["run", "start:frontend"], {
+const frontendProcess = spawnProcess("yarn", ["run", "start:frontend"], {
   env: { ...process.env, PORT: FRONTEND_PORT },
 });
 

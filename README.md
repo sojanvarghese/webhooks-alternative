@@ -8,7 +8,7 @@ This project consists of a React frontend and a Ruby on Rails backend API for we
 
 ## Prerequisites
 - Ruby (see `webhooks-backend/.ruby-version` for the required version)
-- Node.js and npm (for the frontend)
+- Node.js and yarn (for the frontend)
 - Bundler (`gem install bundler`)
 
 ## Setup & Running the Application
@@ -28,8 +28,8 @@ bin/rails server -p 3001
 ### 2. Frontend (React)
 ```sh
 cd webhooks-frontend
-npm install
-npm start
+yarn install
+yarn start
 ```
 - The frontend will be available at `http://localhost:3000`.
 - It fetches data from the backend at `http://localhost:3001/endpoint/show`.

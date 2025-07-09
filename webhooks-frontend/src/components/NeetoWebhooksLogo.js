@@ -9,8 +9,8 @@ const NeetoWebhooksLogo = ({ size = "default" }) => {
     large: { width: "280", height: "70", textClass: "text-lg" },
   };
 
-  // Get width and height based on the size prop
-  const { width, height } = sizes[size] || sizes.default;
+  // Get text class based on the size prop
+  const { textClass } = sizes[size] || sizes.default;
 
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>

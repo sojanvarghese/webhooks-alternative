@@ -44,7 +44,7 @@ This is a monorepo containing:
 ### Processes
 ```
 backend: cd webhooks-backend && bundle exec rails server -p 3001 -b 0.0.0.0
-frontend: cd webhooks-frontend && npm run build && npx serve -s build -l 3000
+frontend: cd webhooks-frontend && yarn run build && yarn dlx serve -s build -l 3000
 ```
 
 ### Environment Variables
@@ -79,7 +79,7 @@ frontend: cd webhooks-frontend && npm run build && npx serve -s build -l 3000
 2. NeetoDeploy detects Ruby app via root `Gemfile`
 3. SQLite buildpack provides database support
 4. Installs Node.js dependencies and Ruby gems
-5. Frontend builds static files via `npm run build`
+5. Frontend builds static files via `yarn run build`
 
 ### Runtime Phase
 1. **Database**: SQLite database stores webhook payload data
@@ -142,10 +142,10 @@ For local development, use the development commands:
 
 ```bash
 # Start backend
-npm run dev:backend
+yarn run dev:backend
 
 # Start frontend (in another terminal)
-npm run dev:frontend
+yarn run dev:frontend
 ```
 
 This will run the frontend in development mode (with hot reload) and backend on separate ports.
