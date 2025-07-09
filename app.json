@@ -12,6 +12,9 @@
       "url": "neeto-deploy/ruby"
     },
     {
+      "url": "neeto-deploy/sqlite"
+    },
+    {
       "url": "neeto-deploy/jemalloc"
     }
   ],
