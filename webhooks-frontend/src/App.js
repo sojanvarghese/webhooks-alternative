@@ -756,7 +756,10 @@ ${
       <section
         style={{ maxWidth: 1400, margin: "1rem auto", padding: "0 1.5rem" }}
       >
-        <div className="app-card composer-card" style={{ borderRadius: 12, padding: "1.5rem" }}>
+        <div
+          className="app-card composer-card"
+          style={{ borderRadius: 12, padding: "1.5rem" }}
+        >
           <h3
             className="text-primary"
             style={{ fontSize: "1.5rem", fontWeight: 600, marginBottom: 16 }}
@@ -834,6 +837,7 @@ ${
                   onClick={handleSendComposerRequest}
                   disabled={composerSending || !composerUrl.trim()}
                   style={{ width: "100%" }}
+                  className="gradient-primary-button"
                 />
               </div>
             </div>

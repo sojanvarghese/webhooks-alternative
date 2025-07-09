@@ -1,71 +1,61 @@
 import React from "react";
 
+// NeetoWebhooksLogo component renders the logo with a webhook-themed SVG and brand text
 const NeetoWebhooksLogo = ({ size = "default" }) => {
-  const dimensions = {
-    small: { width: 140, height: 32, fontSize: 14 },
-    default: { width: 200, height: 44, fontSize: 20 },
-    large: { width: 240, height: 54, fontSize: 26 },
+  // Size configurations for different logo sizes
+  const sizes = {
+    small: { width: "120", height: "30", textClass: "text-sm" },
+    default: { width: "200", height: "50", textClass: "text-base" },
+    large: { width: "280", height: "70", textClass: "text-lg" },
   };
 
-  const { width, height, fontSize } = dimensions[size];
+  // Get width and height based on the size prop
+  const { width, height } = sizes[size] || sizes.default;
 
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 12,
-        width: width,
-        height: height,
-      }}
-    >
-      {/* Icon - Webhook symbol with green Neeto style */}
-      <div
+    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+      {/* SVG icon representing webhook connections */}
+      <svg
+        width={32}
+        height={32}
+        viewBox="0 0 45 45"
+        fill="none"
+        className="flex-shrink-0"
+      >
+        {/* Background shapes representing webhook connections */}
+        {/* Main webhook node (center) */}
+        <rect x="15" y="15" width="15" height="15" rx="3" fill="#5BCC5A" />
+        {/* Connection lines/paths */}
+        <path
+          d="M8 8 L15 15 M30 15 L37 8 M15 30 L8 37 M30 30 L37 37"
+          stroke="#75DC66"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
+        {/* Endpoint nodes */}
+        <circle cx="8" cy="8" r="4" fill="#0DA84C" />
+        <circle cx="37" cy="8" r="4" fill="#0DA84C" />
+        <circle cx="8" cy="37" r="4" fill="#0DA84C" />
+        <circle cx="37" cy="37" r="4" fill="#0DA84C" />
+        {/* Data flow indicators (small dots) */}
+        <circle cx="12" cy="12" r="1.5" fill="#22C55E" />
+        <circle cx="33" cy="12" r="1.5" fill="#22C55E" />
+        <circle cx="12" cy="33" r="1.5" fill="#22C55E" />
+        <circle cx="33" cy="33" r="1.5" fill="#22C55E" />
+      </svg>
+      {/* Brand text for NeetoWebhooks */}
+      <span
         style={{
-          width: height * 1.5, // Increased width
-          height: height * 0.75,
-          background: "linear-gradient(135deg, #22C55E 0%, #16A34A 100%)",
-          borderRadius: "10px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          position: "relative",
-          boxShadow: "0 2px 8px rgba(34, 197, 94, 0.18)",
+          fontFamily:
+            "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+          fontSize: "18px",
+          fontWeight: 700,
+          color: "var(--neeto-ui-gray-900)",
+          letterSpacing: "-0.025em",
         }}
       >
-        {/* Webhook icon - simplified hook/arrow design */}
-        <svg
-          width={height * 0.7}
-          height={height * 0.7}
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M12 2L15.5 8H8.5L12 2Z" fill="#fff" fillOpacity="0.95" />
-          <path
-            d="M7 10C7 8.89543 7.89543 8 9 8H15C16.1046 8 17 8.89543 17 10V14C17 15.1046 16.1046 16 15 16H13L10 22L7 16H9C7.89543 16 7 15.1046 7 14V10Z"
-            fill="#fff"
-            fillOpacity="0.95"
-          />
-          <circle cx="12" cy="12" r="2" fill="#fff" />
-        </svg>
-      </div>
-
-      {/* Text - Neeto brand typography */}
-      <div style={{ display: "flex", alignItems: "baseline" }}>
-        <span
-          style={{
-            fontFamily:
-              "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-            fontSize: fontSize,
-            fontWeight: 700,
-            color: "var(--neeto-ui-gray-900)",
-            letterSpacing: "-0.025em",
-          }}
-        >
-          NeetoWebhooks
-        </span>
-      </div>
+        NeetoWebhooks
+      </span>
     </div>
   );
 };
