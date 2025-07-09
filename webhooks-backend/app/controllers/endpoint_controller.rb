@@ -1,4 +1,21 @@
 class EndpointController < ApplicationController
+  # GET /
+  # Provides basic API information for the root route
+  def api_info
+    render json: {
+      service: "NeetoWebhooks API",
+      version: "1.0",
+      description: "Webhook testing and debugging service",
+      endpoints: {
+        "POST /:uuid": "Store webhook payload for given UUID",
+        "GET /:uuid": "Retrieve payloads for UUID or record GET webhook event",
+        "GET /up": "Health check endpoint"
+      },
+      timestamp: Time.current.iso8601,
+      status: "operational"
+    }
+  end
+
   # POST /:uuid
   # Stores the payload for the given UUID
   def create_payload
