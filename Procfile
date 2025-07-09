@@ -1,5 +1,11 @@
-# Starts the Rails backend server on port 3001
+# Production Procfile for NeetoDeploy
+# Uses static file serving for frontend and Rails API for backend
+
+# Backend: Rails API server
 backend: cd webhooks-backend && bundle exec rails server -p 3001 -b 0.0.0.0
 
-# Starts the React frontend development server on port 3000
-frontend: cd webhooks-frontend && npm run start
+# Frontend: Build React app and serve static files (production-ready)
+frontend: cd webhooks-frontend && npm run build && npx serve -s build -l 3000
+
+# Alternative: Use the root server.js for orchestration
+# web: node server.js
