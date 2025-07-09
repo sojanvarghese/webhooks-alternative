@@ -39,7 +39,6 @@ This is a monorepo containing:
   - `neeto-deploy/nodejs`
   - `neeto-deploy/ruby`
   - `neeto-deploy/sqlite`
-  - `neeto-deploy/jemalloc`
 
 ### Processes
 ```
