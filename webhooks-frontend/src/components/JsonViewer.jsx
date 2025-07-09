@@ -1,362 +1,321 @@
-import React, { useState, useMemo, useCallback } from "react";
-import { Input, Button, Typography } from "@bigbinary/neetoui";
+import React, { useState, useCallback } from "react";
 import { Search, Down, Right, Copy } from "@bigbinary/neeto-icons";
+import { Button, Input, Tooltip } from "@bigbinary/neetoui";
 
-const JsonViewer = ({ data, maxDisplaySize = 1000 }) => {
+const JsonViewer = ({ data }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [expandedPaths, setExpandedPaths] = useState(new Set());
-  const [showRaw, setShowRaw] = useState(false);
+  const [expandAll, setExpandAll] = useState(false);
+  const [viewMode, setViewMode] = useState("tree"); // 'tree' or 'raw'
+  const [copiedPath, setCopiedPath] = useState("");
 
-  // Convert data to string and calculate size
-  const jsonString = useMemo(() => {
-    if (typeof data === "string") {
-      try {
-        return JSON.stringify(JSON.parse(data), null, 2);
-      } catch {
-        return data;
-      }
-    }
-    return JSON.stringify(data, null, 2);
-  }, [data]);
+  // Enhanced data analysis
+  const analyzeData = useCallback((obj) => {
+    let totalKeys = 0;
+    let totalValues = 0;
+    let maxDepth = 0;
 
-  const dataSize = jsonString.length;
-  const isLarge = dataSize > maxDisplaySize;
-
-  // Parse the JSON for tree rendering
-  const parsedData = useMemo(() => {
-    try {
-      if (typeof data === "string") {
-        return JSON.parse(data);
-      }
-      return data;
-    } catch {
-      return data;
-    }
-  }, [data]);
-
-  // Statistics for large data
-  const stats = useMemo(() => {
-    if (!isLarge) return null;
-
-    const calculateStats = (obj, path = "") => {
-      let stats = { objects: 0, arrays: 0, strings: 0, numbers: 0, booleans: 0, nulls: 0, maxDepth: 0 };
-
-      const traverse = (item, currentPath, depth = 0) => {
-        stats.maxDepth = Math.max(stats.maxDepth, depth);
-
-        if (item === null) {
-          stats.nulls++;
-        } else if (typeof item === "boolean") {
-          stats.booleans++;
-        } else if (typeof item === "number") {
-          stats.numbers++;
-        } else if (typeof item === "string") {
-          stats.strings++;
-        } else if (Array.isArray(item)) {
-          stats.arrays++;
-          item.forEach((subItem, index) => {
-            traverse(subItem, `${currentPath}[${index}]`, depth + 1);
-          });
-        } else if (typeof item === "object") {
-          stats.objects++;
-          Object.keys(item).forEach(key => {
-            traverse(item[key], `${currentPath}.${key}`, depth + 1);
-          });
-        }
-      };
-
-      traverse(obj);
-      return stats;
-    };
-
-    return calculateStats(parsedData);
-  }, [parsedData, isLarge]);
-
-  // Toggle expansion of a path
-  const togglePath = useCallback((path) => {
-    setExpandedPaths(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(path)) {
-        newSet.delete(path);
-      } else {
-        newSet.add(path);
-      }
-      return newSet;
-    });
-  }, []);
-
-  // Search functionality
-  const highlightSearch = useCallback((text) => {
-    if (!searchTerm) return text;
-
-    const regex = new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-    return text.replace(regex, '<mark style="background-color: yellow; padding: 2px 4px; border-radius: 2px;">$1</mark>');
-  }, [searchTerm]);
-
-  // Render a JSON node recursively
-  const renderJsonNode = useCallback((value, key, path = "", depth = 0) => {
-    const currentPath = path ? `${path}.${key}` : key;
-    const isExpanded = expandedPaths.has(currentPath);
-
-    if (value === null) {
-      return (
-        <div key={currentPath} style={{ marginLeft: `${depth * 20}px` }}>
-          <span className="json-key">{key && `"${key}": `}</span>
-          <span className="json-null">null</span>
-        </div>
-      );
-    }
-
-    if (typeof value === "boolean") {
-      return (
-        <div key={currentPath} style={{ marginLeft: `${depth * 20}px` }}>
-          <span className="json-key">{key && `"${key}": `}</span>
-          <span className="json-boolean">{value.toString()}</span>
-        </div>
-      );
-    }
-
-    if (typeof value === "number") {
-      return (
-        <div key={currentPath} style={{ marginLeft: `${depth * 20}px` }}>
-          <span className="json-key">{key && `"${key}": `}</span>
-          <span className="json-number">{value}</span>
-        </div>
-      );
-    }
-
-    if (typeof value === "string") {
-      const highlighted = highlightSearch(value);
-      return (
-        <div key={currentPath} style={{ marginLeft: `${depth * 20}px` }}>
-          <span className="json-key">{key && `"${key}": `}</span>
-          <span
-            className="json-string"
-            dangerouslySetInnerHTML={{ __html: `"${highlighted}"` }}
-          />
-        </div>
-      );
-    }
-
-    if (Array.isArray(value)) {
-      return (
-        <div key={currentPath} style={{ marginLeft: `${depth * 20}px` }}>
-                  <div
-          className="json-expandable"
-          onClick={() => togglePath(currentPath)}
-          style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "4px" }}
-        >
-          {isExpanded ? <Down size={16} /> : <Right size={16} />}
-          <span className="json-key">{key && `"${key}": `}</span>
-          <span className="json-bracket">[</span>
-          {!isExpanded && <span className="json-info">{value.length} items</span>}
-          {!isExpanded && <span className="json-bracket">]</span>}
-        </div>
-          {isExpanded && (
-            <div>
-              {value.map((item, index) => renderJsonNode(item, index, currentPath, depth + 1))}
-              <div style={{ marginLeft: `${depth * 20}px` }}>
-                <span className="json-bracket">]</span>
-              </div>
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    if (typeof value === "object") {
-      const keys = Object.keys(value);
-      return (
-        <div key={currentPath} style={{ marginLeft: `${depth * 20}px` }}>
-                  <div
-          className="json-expandable"
-          onClick={() => togglePath(currentPath)}
-          style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "4px" }}
-        >
-          {isExpanded ? <Down size={16} /> : <Right size={16} />}
-          <span className="json-key">{key && `"${key}": `}</span>
-          <span className="json-bracket">{"{"}</span>
-          {!isExpanded && <span className="json-info">{keys.length} keys</span>}
-          {!isExpanded && <span className="json-bracket">{"}"}</span>}
-        </div>
-          {isExpanded && (
-            <div>
-              {keys.map(objKey => renderJsonNode(value[objKey], objKey, currentPath, depth + 1))}
-              <div style={{ marginLeft: `${depth * 20}px` }}>
-                <span className="json-bracket">{"}"}</span>
-              </div>
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    return null;
-  }, [expandedPaths, highlightSearch, togglePath]);
-
-  // Copy to clipboard
-  const handleCopy = useCallback(() => {
-    navigator.clipboard.writeText(jsonString);
-  }, [jsonString]);
-
-  // Expand/collapse all
-  const expandAll = useCallback(() => {
-    const getAllPaths = (obj, path = "", paths = new Set()) => {
-      if (typeof obj === "object" && obj !== null) {
-        if (Array.isArray(obj)) {
-          paths.add(path);
-          obj.forEach((item, index) => {
-            getAllPaths(item, `${path}[${index}]`, paths);
-          });
+    const traverse = (data, depth = 0) => {
+      maxDepth = Math.max(maxDepth, depth);
+      if (typeof data === "object" && data !== null) {
+        if (Array.isArray(data)) {
+          totalValues += data.length;
+          data.forEach((item) => traverse(item, depth + 1));
         } else {
-          paths.add(path);
-          Object.keys(obj).forEach(key => {
-            getAllPaths(obj[key], path ? `${path}.${key}` : key, paths);
-          });
+          const keys = Object.keys(data);
+          totalKeys += keys.length;
+          keys.forEach((key) => traverse(data[key], depth + 1));
         }
+      } else {
+        totalValues++;
       }
-      return paths;
     };
 
-    setExpandedPaths(getAllPaths(parsedData));
-  }, [parsedData]);
-
-  const collapseAll = useCallback(() => {
-    setExpandedPaths(new Set());
+    traverse(obj);
+    return { totalKeys, totalValues, maxDepth };
   }, []);
+
+  const stats = analyzeData(data);
+
+  const copyToClipboard = useCallback((text, path = "") => {
+    navigator.clipboard.writeText(text);
+    setCopiedPath(path);
+    setTimeout(() => setCopiedPath(""), 2000);
+  }, []);
+
+  const JsonNode = ({ value, path = "", depth = 0, isLast = true }) => {
+    const [isExpanded, setIsExpanded] = useState(expandAll || depth < 2);
+
+    const isObject = typeof value === "object" && value !== null;
+    const isArray = Array.isArray(value);
+    const isEmpty = isObject && Object.keys(value).length === 0;
+
+    // Search highlighting
+    const isSearchMatch = searchTerm &&
+      (path.toLowerCase().includes(searchTerm.toLowerCase()) ||
+       (typeof value === "string" && value.toLowerCase().includes(searchTerm.toLowerCase())));
+
+    const getTypeColor = (val) => {
+      if (val === null) return "#ef4444"; // red-500
+      if (typeof val === "string") return "#059669"; // emerald-600
+      if (typeof val === "number") return "#d97706"; // amber-600
+      if (typeof val === "boolean") return "#7c3aed"; // violet-600
+      return "#374151"; // gray-700
+    };
+
+    const getTypeIcon = (val) => {
+      if (isArray) return "[]";
+      if (isObject) return "{}";
+      if (typeof val === "string") return '"';
+      if (typeof val === "number") return "#";
+      if (typeof val === "boolean") return val ? "✓" : "✗";
+      if (val === null) return "∅";
+      return "";
+    };
+
+    if (!isObject) {
+      return (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            padding: "2px 0",
+            backgroundColor: isSearchMatch ? "#fef3c7" : "transparent",
+            borderRadius: "4px",
+            paddingLeft: `${depth * 20}px`,
+          }}
+        >
+          <span style={{
+            color: "#9ca3af",
+            fontSize: "12px",
+            minWidth: "16px",
+            fontWeight: 600
+          }}>
+            {getTypeIcon(value)}
+          </span>
+          <span
+            style={{
+              color: getTypeColor(value),
+              fontFamily: "monospace",
+              fontSize: "13px",
+              fontWeight: 500,
+              wordBreak: "break-all"
+            }}
+          >
+            {typeof value === "string" ? `"${value}"` : String(value)}
+          </span>
+          <Tooltip content={copiedPath === path ? "Copied!" : "Copy value"}>
+            <Button
+              variant="text"
+              icon={Copy}
+              size="small"
+              onClick={() => copyToClipboard(String(value), path)}
+              style={{
+                padding: "4px",
+                minWidth: "auto",
+                opacity: 0.6
+              }}
+            />
+          </Tooltip>
+        </div>
+      );
+    }
+
+    const entries = isArray ?
+      value.map((item, index) => [index, item]) :
+      Object.entries(value);
+
+    return (
+      <div style={{ paddingLeft: depth > 0 ? `${depth * 20}px` : "0" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            padding: "4px 0",
+            cursor: isEmpty ? "default" : "pointer",
+            backgroundColor: isSearchMatch ? "#fef3c7" : "transparent",
+            borderRadius: "4px",
+          }}
+          onClick={() => !isEmpty && setIsExpanded(!isExpanded)}
+        >
+          {!isEmpty && (
+            <span style={{ color: "#6b7280", fontSize: "12px" }}>
+              {isExpanded ? <Down size={12} /> : <Right size={12} />}
+            </span>
+          )}
+          <span style={{
+            color: "#9ca3af",
+            fontSize: "12px",
+            minWidth: "16px",
+            fontWeight: 600
+          }}>
+            {getTypeIcon(value)}
+          </span>
+          <span style={{
+            color: "#374151",
+            fontSize: "13px",
+            fontWeight: 600
+          }}>
+            {isArray ? `Array(${value.length})` : `Object(${Object.keys(value).length})`}
+          </span>
+          <Tooltip content={copiedPath === path ? "Copied!" : "Copy object"}>
+            <Button
+              variant="text"
+              icon={Copy}
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation();
+                copyToClipboard(JSON.stringify(value, null, 2), path);
+              }}
+              style={{
+                padding: "4px",
+                minWidth: "auto",
+                opacity: 0.6
+              }}
+            />
+          </Tooltip>
+        </div>
+
+        {!isEmpty && isExpanded && (
+          <div style={{ marginTop: "4px" }}>
+            {entries.map(([key, val], index) => {
+              const currentPath = path ? `${path}.${key}` : String(key);
+              return (
+                <div key={currentPath} style={{ marginBottom: "2px" }}>
+                  <div style={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: "8px",
+                    paddingLeft: "20px"
+                  }}>
+                    <span style={{
+                      color: "#2563eb",
+                      fontSize: "13px",
+                      fontWeight: 600,
+                      minWidth: "fit-content",
+                      marginTop: "2px"
+                    }}>
+                      {isArray ? `[${key}]` : `${key}:`}
+                    </span>
+                    <div style={{ flex: 1 }}>
+                      <JsonNode
+                        value={val}
+                        path={currentPath}
+                        depth={depth + 1}
+                        isLast={index === entries.length - 1}
+                      />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
-    <div className="json-viewer">
-      <style>{`
-        .json-viewer {
-          font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-          font-size: 13px;
-          line-height: 1.4;
-        }
-        .json-key {
-          color: #0066cc;
-          font-weight: 600;
-        }
-        .json-string {
-          color: #4CAF50;
-        }
-        .json-number {
-          color: #ff9500;
-        }
-        .json-boolean {
-          color: #ff5722;
-        }
-        .json-null {
-          color: #9e9e9e;
-        }
-        .json-bracket {
-          color: #666;
-          font-weight: 600;
-        }
-        .json-info {
-          color: #888;
-          font-style: italic;
-          font-size: 12px;
-          margin-left: 8px;
-        }
-        .json-expandable:hover {
-          background-color: rgba(0, 0, 0, 0.05);
-          border-radius: 4px;
-        }
-        .json-controls {
-          display: flex;
-          gap: 12px;
-          margin-bottom: 16px;
-          flex-wrap: wrap;
-          align-items: center;
-        }
-        .json-stats {
-          background: #f5f5f5;
-          padding: 12px;
-          border-radius: 8px;
-          margin-bottom: 16px;
-          font-size: 12px;
-        }
-        .json-stats-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-          gap: 8px;
-        }
-        .json-content {
-          background: #fafafa;
-          padding: 16px;
-          border-radius: 8px;
-          border: 1px solid #e0e0e0;
-          max-height: 500px;
-          overflow-y: auto;
-        }
-        .json-raw {
-          white-space: pre-wrap;
-          word-break: break-all;
-        }
-      `}</style>
+    <div style={{
+      fontFamily: "'JetBrains Mono', 'Monaco', 'Consolas', monospace",
+      border: "1px solid #e5e7eb",
+      borderRadius: "8px",
+      backgroundColor: "#ffffff"
+    }}>
+      {/* Controls */}
+      <div style={{
+        padding: "12px 16px",
+        borderBottom: "1px solid #e5e7eb",
+        backgroundColor: "#f9fafb",
+        borderRadius: "8px 8px 0 0"
+      }}>
+        <div style={{
+          display: "flex",
+          gap: "12px",
+          alignItems: "center",
+          flexWrap: "wrap",
+          marginBottom: "12px"
+        }}>
+          <div style={{ display: "flex", gap: "8px" }}>
+            <Button
+              label="Tree"
+              variant={viewMode === "tree" ? "primary" : "secondary"}
+              size="small"
+              onClick={() => setViewMode("tree")}
+            />
+            <Button
+              label="Raw"
+              variant={viewMode === "raw" ? "primary" : "secondary"}
+              size="small"
+              onClick={() => setViewMode("raw")}
+            />
+          </div>
 
-      <div className="json-controls">
-        <div style={{ flex: 1, maxWidth: 300 }}>
-          <Input
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search JSON..."
-            prefix={<Search size={16} />}
-            size="small"
-          />
+          {viewMode === "tree" && (
+            <>
+              <Button
+                label={expandAll ? "Collapse All" : "Expand All"}
+                variant="secondary"
+                size="small"
+                onClick={() => setExpandAll(!expandAll)}
+              />
+              <div style={{ flex: 1, maxWidth: "200px" }}>
+                <Input
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Search..."
+                  size="small"
+                  prefix={<Search size={16} />}
+                />
+              </div>
+            </>
+          )}
         </div>
-        <Button
-          variant="secondary"
-          size="small"
-          onClick={expandAll}
-          label="Expand All"
-        />
-        <Button
-          variant="secondary"
-          size="small"
-          onClick={collapseAll}
-          label="Collapse All"
-        />
-        <Button
-          variant="secondary"
-          size="small"
-          onClick={() => setShowRaw(!showRaw)}
-          label={showRaw ? "Tree View" : "Raw View"}
-        />
-        <Button
-          variant="secondary"
-          size="small"
-          onClick={handleCopy}
-          icon={Copy}
-          label="Copy"
-        />
+
+        {/* Stats */}
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))",
+          gap: "12px",
+          fontSize: "12px",
+          color: "#6b7280"
+        }}>
+          <div>
+            <span style={{ fontWeight: 600 }}>Keys:</span> {stats.totalKeys}
+          </div>
+          <div>
+            <span style={{ fontWeight: 600 }}>Values:</span> {stats.totalValues}
+          </div>
+          <div>
+            <span style={{ fontWeight: 600 }}>Depth:</span> {stats.maxDepth}
+          </div>
+          <div>
+            <span style={{ fontWeight: 600 }}>Size:</span> {JSON.stringify(data).length}B
+          </div>
+        </div>
       </div>
 
-      {isLarge && stats && (
-        <div className="app-card" style={{ marginBottom: 16, padding: 16, borderRadius: 8 }}>
-          <Typography style="body2" weight="medium" marginBottom="xs">
-            Large Dataset Statistics ({(dataSize / 1024).toFixed(1)}KB)
-          </Typography>
-          <div className="json-stats-grid">
-            <Typography style="body3">Objects: {stats.objects}</Typography>
-            <Typography style="body3">Arrays: {stats.arrays}</Typography>
-            <Typography style="body3">Strings: {stats.strings}</Typography>
-            <Typography style="body3">Numbers: {stats.numbers}</Typography>
-            <Typography style="body3">Booleans: {stats.booleans}</Typography>
-            <Typography style="body3">Nulls: {stats.nulls}</Typography>
-            <Typography style="body3">Max Depth: {stats.maxDepth}</Typography>
-          </div>
-        </div>
-      )}
-
-      <div className="json-content">
-        {showRaw ? (
-          <pre className="json-raw">{jsonString}</pre>
+      {/* Content */}
+      <div style={{
+        padding: "16px",
+        maxHeight: "500px",
+        overflow: "auto",
+        backgroundColor: "#ffffff"
+      }}>
+        {viewMode === "tree" ? (
+          <JsonNode value={data} />
         ) : (
-          <div>
-            {renderJsonNode(parsedData, "", "", 0)}
-          </div>
+          <pre style={{
+            margin: 0,
+            whiteSpace: "pre-wrap",
+            wordBreak: "break-word",
+            fontSize: "13px",
+            lineHeight: 1.6,
+            color: "#374151"
+          }}>
+            {JSON.stringify(data, null, 2)}
+          </pre>
         )}
       </div>
     </div>
