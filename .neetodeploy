@@ -1,0 +1,19 @@
+# NeetoDeploy Configuration
+# Explicitly force buildpack deployment over Docker
+
+build_system: buildpacks
+buildpacks:
+  - neeto-deploy/nodejs
+  - neeto-deploy/ruby
+  - neeto-deploy/sqlite
+  - neeto-deploy/jemalloc
+
+processes:
+  backend: cd webhooks-backend && bundle exec rails server -p 3001 -b 0.0.0.0
+  frontend: cd webhooks-frontend && npm run build && npx serve -s build -l 3000
+
+env:
+  NODE_ENV: production
+  RAILS_ENV: production
+  RAILS_SERVE_STATIC_FILES: true
+  RAILS_LOG_TO_STDOUT: true

@@ -108,16 +108,25 @@ The application uses SQLite for data persistence:
    - Ensure `package.json` and `Gemfile` exist at root level
    - Check that `.buildpacks` file specifies the correct buildpacks including SQLite
 
-2. **Database Issues**
+2. **Docker vs Buildpack Deployment Conflict**
+   - **Issue**: NeetoDeploy tries to use Docker instead of Buildpacks (evidenced by Docker layer pull logs)
+   - **Cause**: Presence of `Dockerfile` in `webhooks-backend/` directory
+   - **Solution**:
+     - Rename or remove `webhooks-backend/Dockerfile` (renamed to `Dockerfile.backup`)
+     - Rename or remove `webhooks-backend/.dockerignore` (renamed to `.dockerignore.backup`)
+     - Add `.neetodeploy` configuration file to explicitly force buildpack usage
+     - Ensure NeetoDeploy build system is set to "Buildpacks" not "Docker"
+
+3. **Database Issues**
    - Verify neetodeploy-sqlite addon is installed
    - Check that database migrations ran successfully in deployment logs
    - Ensure SQLite buildpack is included in configuration
 
-3. **Frontend API Calls Fail**
+4. **Frontend API Calls Fail**
    - Verify the API configuration in `webhooks-frontend/src/config/api.js`
    - Check that backend is running on port 3001
 
-4. **Static Files Not Loading**
+5. **Static Files Not Loading**
    - Ensure `serve` package is installed in `webhooks-frontend/package.json`
    - Verify the build process completes successfully
 
