@@ -12,6 +12,7 @@ import {
 import { Copy } from "@bigbinary/neeto-icons";
 import NeetoWebhooksLogo from "./components/NeetoWebhooksLogo";
 import LandingPage from "./components/LandingPage";
+import { createApiUrl } from "./config/api";
 import "./App.css";
 
 // Helper to generate a UUID (v4)
@@ -30,7 +31,7 @@ function MainApp() {
   const [uuid, setUuid] = useState(null);
   const [backendUuid, setBackendUuid] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error] = useState(null);
   const [copied, setCopied] = useState(false);
   const [payloads, setPayloads] = useState([]);
   const [fetchingPayloads, setFetchingPayloads] = useState(false);
@@ -75,7 +76,7 @@ function MainApp() {
     if (!uuid) return;
     setFetchingPayloads(true);
     axios
-      .get(`http://localhost:3001/${uuid}?fetch_payloads=true`)
+      .get(createApiUrl(`${uuid}?fetch_payloads=true`))
       .then((response) => {
         setPayloads(response.data.payloads || []);
         setFetchingPayloads(false);
@@ -101,8 +102,8 @@ function MainApp() {
     );
   };
 
-  // Get domain for display
-  const domain = window.location.origin;
+  // Get domain for display - use API base URL for webhook endpoint
+  const domain = createApiUrl("").replace(/\/$/, ""); // Remove trailing slash
   const url = backendUuid ? `${domain}/${backendUuid}` : "";
 
   // Copy to clipboard handler
