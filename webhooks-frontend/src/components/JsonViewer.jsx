@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from "react";
-import { Input, Button } from "@bigbinary/neetoui";
+import { Input, Button, Typography } from "@bigbinary/neetoui";
 import { Search, Down, Right, Copy } from "@bigbinary/neeto-icons";
 
 const JsonViewer = ({ data, maxDisplaySize = 1000 }) => {
@@ -334,18 +334,18 @@ const JsonViewer = ({ data, maxDisplaySize = 1000 }) => {
       </div>
 
       {isLarge && stats && (
-        <div className="json-stats">
-          <div style={{ fontWeight: 600, marginBottom: 8 }}>
+        <div className="app-card" style={{ marginBottom: 16, padding: 16, borderRadius: 8 }}>
+          <Typography style="body2" weight="medium" marginBottom="xs">
             Large Dataset Statistics ({(dataSize / 1024).toFixed(1)}KB)
-          </div>
+          </Typography>
           <div className="json-stats-grid">
-            <div>Objects: {stats.objects}</div>
-            <div>Arrays: {stats.arrays}</div>
-            <div>Strings: {stats.strings}</div>
-            <div>Numbers: {stats.numbers}</div>
-            <div>Booleans: {stats.booleans}</div>
-            <div>Nulls: {stats.nulls}</div>
-            <div>Max Depth: {stats.maxDepth}</div>
+            <Typography style="body3">Objects: {stats.objects}</Typography>
+            <Typography style="body3">Arrays: {stats.arrays}</Typography>
+            <Typography style="body3">Strings: {stats.strings}</Typography>
+            <Typography style="body3">Numbers: {stats.numbers}</Typography>
+            <Typography style="body3">Booleans: {stats.booleans}</Typography>
+            <Typography style="body3">Nulls: {stats.nulls}</Typography>
+            <Typography style="body3">Max Depth: {stats.maxDepth}</Typography>
           </div>
         </div>
       )}

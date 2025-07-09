@@ -1,8 +1,9 @@
 import React from "react";
-import { Button } from "@bigbinary/neetoui";
+import { Button, Typography } from "@bigbinary/neetoui";
+import { Sun, Moon } from "@bigbinary/neeto-icons";
 import NeetoWebhooksLogo from "./NeetoWebhooksLogo";
 
-const LandingPage = ({ onStartTesting }) => {
+const LandingPage = ({ onStartTesting, darkMode, toggleDarkMode }) => {
   return (
     <div className="landing-page">
       {/* Header */}
@@ -16,12 +17,22 @@ const LandingPage = ({ onStartTesting }) => {
         }}
       >
         <NeetoWebhooksLogo size="default" />
-        <Button
-          variant="primary"
-          label="Start Testing"
-          onClick={onStartTesting}
-          className="gradient-primary-button"
-        />
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          {/* Dark mode toggle button in header */}
+          <Button
+            variant="text"
+            icon={darkMode ? Sun : Moon}
+            onClick={toggleDarkMode}
+            aria-label={`Switch to ${darkMode ? "light" : "dark"} mode`}
+            size="large"
+          />
+          <Button
+            variant="primary"
+            label="Start Testing"
+            onClick={onStartTesting}
+            className="gradient-primary-button"
+          />
+        </div>
       </header>
 
       {/* Hero Section */}
@@ -62,7 +73,7 @@ const LandingPage = ({ onStartTesting }) => {
             style={{
               fontSize: "1.3rem",
               lineHeight: 1.6,
-              marginBottom: "2.5rem",
+              marginBottom: "2rem",
             }}
           >
             Get a unique webhook endpoint instantly. Send HTTP requests, inspect
