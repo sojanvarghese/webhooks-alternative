@@ -1,0 +1,45 @@
+{
+  "name": "webhooks-alternative",
+  "description": "A webhook testing application with React frontend and Rails backend",
+  "repository": "https://github.com/yourusername/webhooks-alternative",
+  "logo": "https://webhooks-alternative-1.neetodeployapp.com/favicon.svg",
+  "keywords": ["webhooks", "testing", "react", "rails", "api", "neeto"],
+  "buildpacks": [
+    {
+      "url": "neeto-deploy/nodejs"
+    },
+    {
+      "url": "neeto-deploy/ruby"
+    },
+    {
+      "url": "neeto-deploy/jemalloc"
+    }
+  ],
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "standard-1x"
+    }
+  },
+  "env": {
+    "NODE_ENV": {
+      "description": "Node.js environment",
+      "value": "production"
+    },
+    "RAILS_ENV": {
+      "description": "Rails environment",
+      "value": "production"
+    },
+    "RAILS_SERVE_STATIC_FILES": {
+      "description": "Enable Rails to serve static files",
+      "value": "true"
+    },
+    "RAILS_LOG_TO_STDOUT": {
+      "description": "Enable Rails logging to stdout",
+      "value": "true"
+    }
+  },
+  "scripts": {
+    "postdeploy": "cd webhooks-backend && bundle exec rails db:migrate"
+  }
+}

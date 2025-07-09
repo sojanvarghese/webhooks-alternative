@@ -1,0 +1,43 @@
+{
+  "name": "webhooks-alternative",
+  "version": "1.0.0",
+  "description": "A webhook testing application with React frontend and Rails backend",
+  "private": true,
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "scripts": {
+    "install:frontend": "cd webhooks-frontend && npm install",
+    "install:backend": "cd webhooks-backend && bundle install",
+    "install:all": "npm run install:frontend && npm run install:backend",
+    "build:frontend": "cd webhooks-frontend && npm run build",
+    "start:frontend": "cd webhooks-frontend && npm run build && npx serve -s build -l 3000",
+    "start:backend": "cd webhooks-backend && bundle exec rails server -p 3001 -b 0.0.0.0",
+    "start": "npm run start:frontend",
+    "dev:frontend": "cd webhooks-frontend && npm start",
+    "dev:backend": "cd webhooks-backend && bundle exec rails server -p 3001 -b 0.0.0.0",
+    "test:frontend": "cd webhooks-frontend && npm test",
+    "build": "npm run build:frontend"
+  },
+  "dependencies": {
+    "serve": "^14.2.1"
+  },
+  "devDependencies": {},
+  "workspaces": [
+    "webhooks-frontend"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/webhooks-alternative.git"
+  },
+  "keywords": [
+    "webhooks",
+    "testing",
+    "react",
+    "rails",
+    "api"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}
