@@ -28,5 +28,10 @@ module WebhooksBackend
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
+    # Generate secret key base if not provided (for deployment)
+    if Rails.env.production? && ENV['SECRET_KEY_BASE'].blank?
+      ENV['SECRET_KEY_BASE'] = SecureRandom.hex(64)
+    end
   end
 end

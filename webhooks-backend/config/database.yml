@@ -23,3 +23,7 @@ test:
 production:
   <<: *default
   database: storage/production.sqlite3
+  # Ensure database directory exists
+  # and handle concurrent access better
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 30000

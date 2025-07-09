@@ -12,6 +12,7 @@ import {
 import { Copy } from "@bigbinary/neeto-icons";
 import NeetoWebhooksLogo from "./components/NeetoWebhooksLogo";
 import LandingPage from "./components/LandingPage";
+import JsonViewer from "./components/JsonViewer";
 import { createApiUrl } from "./config/api";
 import "./App.css";
 
@@ -729,20 +730,7 @@ ${
                         >
                           Request Body
                         </summary>
-                        <pre
-                          className="code-block"
-                          style={{
-                            margin: 0,
-                            whiteSpace: "pre-wrap",
-                            wordBreak: "break-all",
-                            fontFamily: "monospace",
-                            fontSize: 12,
-                            padding: 12,
-                            borderRadius: 4,
-                          }}
-                        >
-                          {JSON.stringify(p.data, null, 2)}
-                        </pre>
+                        <JsonViewer data={p.data} />
                       </details>
                     )}
                   </div>
@@ -919,21 +907,9 @@ ${
                   >
                     Response Body:
                   </div>
-                  <pre
-                    className="code-block"
-                    style={{
-                      margin: 0,
-                      padding: 12,
-                      borderRadius: 4,
-                      fontSize: 12,
-                      maxHeight: 200,
-                      overflow: "auto",
-                    }}
-                  >
-                    {typeof composerResponse.data === "string"
-                      ? composerResponse.data
-                      : JSON.stringify(composerResponse.data, null, 2)}
-                  </pre>
+                  <div style={{ maxHeight: 200, overflow: "auto" }}>
+                    <JsonViewer data={composerResponse.data} />
+                  </div>
                 </div>
               )}
 
