@@ -51,9 +51,6 @@
     "zustand": "^4.3.2"
   },
   "scripts": {
-    "copy-neetoui-css": "cp node_modules/@bigbinary/neetoui/dist/index.css src/neetoui.css",
-    "prestart": "yarn copy-neetoui-css",
-    "prebuild": "yarn copy-neetoui-css",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

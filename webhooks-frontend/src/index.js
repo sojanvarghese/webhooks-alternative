@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import "../node_modules/@bigbinary/neetoui/dist/index.css"; // neetoUI styles
+import "./neetoui.css"; // neetoUI styles
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
