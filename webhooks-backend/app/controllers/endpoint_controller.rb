@@ -57,7 +57,7 @@ class EndpointController < ApplicationController
     # Check if this is a request to fetch payloads (from our frontend)
     # Frontend requests will have specific headers or query params
     if request.headers['Accept']&.include?('application/json') &&
-       (request.headers['Referer']&.include?('localhost:3000') || params[:fetch_payloads] == 'true')
+       params[:fetch_payloads] == 'true'
       # Return payloads for frontend
       payloads = Payload.where(uuid: uuid).order(created_at: :desc)
       render json: {

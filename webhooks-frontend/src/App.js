@@ -82,19 +82,19 @@ function MainApp({ darkMode, toggleDarkMode }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: composerMethod !== "GET" && Object.keys(requestData).length > 0 ? requestData : null,
+        body:
+          composerMethod !== "GET" && Object.keys(requestData).length > 0
+            ? requestData
+            : null,
       };
 
-      const response = await axios.post(
-        createApiUrl("/proxy"),
-        proxyPayload,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          timeout: 30000,
-        }
-      );
+      // New commit
+      const response = await axios.post(createApiUrl("/proxy"), proxyPayload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        timeout: 30000,
+      });
 
       // Extract the response data from the proxy response
       const proxyResponse = response.data;
@@ -111,7 +111,9 @@ function MainApp({ darkMode, toggleDarkMode }) {
       if (proxyResponse.success) {
         Toastr.success("Request sent successfully!");
       } else {
-        Toastr.error(`Request failed: ${proxyResponse.error || "Unknown error"}`);
+        Toastr.error(
+          `Request failed: ${proxyResponse.error || "Unknown error"}`
+        );
       }
     } catch (error) {
       setComposerResponse({
@@ -171,7 +173,6 @@ Data: ${JSON.stringify(p.data, null, 2)}
         {
           headers: {
             Accept: "application/json",
-            Referer: window.location.origin,
           },
         }
       );
