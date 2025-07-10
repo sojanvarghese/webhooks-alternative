@@ -195,7 +195,15 @@ const ComposerView = ({
               )}
               <div style={{ marginLeft: "auto" }}>
                 <span style={{ fontSize: "0.75rem", color: "#6b7280" }}>
-                  {new Date(composerResponse.timestamp).toLocaleString()}
+                  {composerResponse.timestamp ?
+                    (() => {
+                      const date = new Date(composerResponse.timestamp);
+                      return isNaN(date.getTime()) ?
+                        composerResponse.timestamp :
+                        date.toLocaleString();
+                    })()
+                    : "No timestamp"
+                  }
                 </span>
               </div>
             </div>

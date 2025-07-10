@@ -153,15 +153,52 @@ class EndpointController < ApplicationController
         render json: { error: "Invalid URL format" }, status: :bad_request and return
       end
 
-      # Make the HTTP request
+      # Check if this is a self-request (same domain)
+      current_host = request.host
+      uri = URI.parse(url)
+
+      # If it's a self-request to our own webhook endpoint, handle it internally
+      if uri.host == current_host && /^\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/.match(uri.path)
+        # Extract UUID from the path
+        webhook_uuid = uri.path.sub('/', '')
+
+        # Create payload directly instead of making HTTP request
+        payload = Payload.create(
+          uuid: webhook_uuid,
+          data: body_data,
+          method: method,
+          headers: { 'Content-Type' => 'application/json', 'User-Agent' => 'Ruby' },
+          ip_address: request.remote_ip,
+          user_agent: 'Ruby',
+          query_params: uri.query || '',
+          content_type: 'application/json'
+        )
+
+        # Return the same response format as a successful webhook call
+        render json: {
+          success: true,
+          status: 201,
+          statusText: 'Created',
+          data: { success: true, payload: payload },
+          headers: { 'content-type' => ['application/json; charset=utf-8'] },
+          timestamp: Time.current.iso8601
+        }
+        return
+      end
+
+      # Make the HTTP request for external URLs
       require 'net/http'
       require 'json'
 
-      uri = URI.parse(url)
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = uri.scheme == 'https'
       http.read_timeout = 30
       http.open_timeout = 30
+
+      # Skip SSL verification for self-requests in production to avoid certificate issues
+      if uri.host == current_host
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      end
 
       # Create the request
       case method.upcase
