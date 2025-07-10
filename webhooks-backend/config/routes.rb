@@ -12,6 +12,10 @@ Rails.application.routes.draw do
   put '/:uuid', to: 'endpoint#handle_put_request'
   patch '/:uuid', to: 'endpoint#handle_patch_request'
   delete '/:uuid', to: 'endpoint#handle_delete_request'
+
+  # Catch-all fallback route for any requests that should be handled by frontend
+  # This should never be reached in normal operation, but provides safety net
+  get '*path', to: 'endpoint#frontend_fallback'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
 end

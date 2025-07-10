@@ -115,6 +115,18 @@ class EndpointController < ApplicationController
     handle_webhook_request('DELETE')
   end
 
+  # Fallback method for requests that should be handled by frontend
+  # This indicates a configuration issue but provides a helpful response
+  def frontend_fallback
+    render json: {
+      error: "Frontend route accessed directly",
+      message: "This request should be handled by the React frontend. Please check your deployment configuration.",
+      timestamp: Time.current.iso8601,
+      path: request.path,
+      method: request.method
+    }, status: :not_found
+  end
+
   private
 
   # Generic webhook handler for different HTTP methods

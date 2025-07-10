@@ -1,8 +1,8 @@
 # Production Procfile for NeetoDeploy
-# Follows NeetoDeploy best practices for Rails + React apps
+# Monolithic deployment with Express server serving React frontend and proxying to Rails API
 
 # Release: Ensure database setup before migrations
 release: cd webhooks-backend && mkdir -p storage && bundle exec rake db:create db:schema:load db:migrate
 
-# Web: Rails API server
-web: cd webhooks-backend && bundle exec puma -C config/puma.rb
+# Web: Express server that serves React frontend and proxies API requests to Rails
+web: node server.js
