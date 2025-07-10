@@ -103,7 +103,6 @@ const MainLayout = ({
               }
             }}
           >
-            <span>📊</span>
             Dashboard
           </button>
 
@@ -137,7 +136,6 @@ const MainLayout = ({
               }
             }}
           >
-            <span>⚡</span>
             Request Composer
           </button>
         </nav>

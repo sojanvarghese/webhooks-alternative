@@ -32,8 +32,9 @@ if (!fs.existsSync(buildPath)) {
 // Create Express app
 const app = express();
 
-// Add basic middleware
-app.use(express.json());
+// DO NOT use app.use(express.json()) here as it consumes the request body
+// before it can be proxied to the Rails backend. Only use JSON parsing
+// for specific routes that need it, not for proxy routes.
 
 // Function to spawn a process with proper logging
 function spawnProcess(command, args, options = {}) {
@@ -73,6 +74,9 @@ const backendProcess = spawnProcess(
 // Wait for backend to start
 setTimeout(() => {
   console.log("🌐 Setting up frontend server and API proxy...");
+
+  // IMPORTANT: Define proxy routes FIRST, before static file serving
+  // This ensures that proxy routes are matched before the catch-all React route
 
   // Health check proxy
   app.use(
@@ -116,10 +120,13 @@ setTimeout(() => {
     })
   );
 
+  // ONLY AFTER defining proxies, serve static files and catch-all React route
+
   // Serve static files from React build
   app.use(express.static(buildPath));
 
   // Handle React Router - serve index.html for all other routes
+  // This MUST be last, as it's the catch-all route
   app.get("*", (req, res) => {
     const indexPath = path.join(buildPath, "index.html");
     if (fs.existsSync(indexPath)) {
