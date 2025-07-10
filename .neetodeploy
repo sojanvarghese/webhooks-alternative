@@ -23,5 +23,3 @@ env:
   DATABASE_URL: sqlite3:storage/production.sqlite3
   FORCE_SSL: false
   SECRET_KEY_BASE: $(openssl rand -hex 64)
-  PORT: 3000
-  BACKEND_PORT: 3001
