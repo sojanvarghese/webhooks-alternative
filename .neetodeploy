@@ -1,5 +1,5 @@
 # NeetoDeploy Configuration
-# Monolithic deployment with Rails + React
+# Monolithic deployment with Rails backend + React frontend
 
 build_system: buildpacks
 buildpacks:
@@ -13,8 +13,7 @@ build:
   frontend: cd webhooks-frontend && yarn install --frozen-lockfile && yarn build
 
 processes:
-  backend: cd webhooks-backend && bundle exec rails server -p 3001 -b 0.0.0.0
-  frontend: cd webhooks-frontend && yarn dlx serve -s build -l 3000
+  web: node server.js
 
 env:
   NODE_ENV: production
@@ -24,3 +23,5 @@ env:
   DATABASE_URL: sqlite3:storage/production.sqlite3
   FORCE_SSL: false
   SECRET_KEY_BASE: $(openssl rand -hex 64)
+  PORT: 3000
+  BACKEND_PORT: 3001

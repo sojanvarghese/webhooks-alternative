@@ -96,4 +96,53 @@ class EndpointController < ApplicationController
 
   # Alias for backward compatibility
   alias_method :payloads, :handle_get_request
+
+  # PUT /:uuid
+  # Stores the payload for the given UUID (similar to POST)
+  def handle_put_request
+    handle_webhook_request('PUT')
+  end
+
+  # PATCH /:uuid
+  # Stores the payload for the given UUID (similar to POST)
+  def handle_patch_request
+    handle_webhook_request('PATCH')
+  end
+
+  # DELETE /:uuid
+  # Stores the payload for the given UUID (similar to POST)
+  def handle_delete_request
+    handle_webhook_request('DELETE')
+  end
+
+  private
+
+  # Generic webhook handler for different HTTP methods
+  def handle_webhook_request(method_name)
+    uuid = params[:uuid]
+    if uuid.blank?
+      render json: { error: "UUID not provided" }, status: :bad_request and return
+    end
+
+    begin
+      body = request.body.read
+      data = body.presence && JSON.parse(body)
+    rescue JSON::ParserError
+      data = body.presence # If not JSON, store as string
+    end
+
+    # Capture request metadata
+    payload = Payload.create(
+      uuid: uuid,
+      data: data,
+      method: method_name,
+      headers: request.headers.to_h.select { |k, v| k.start_with?('HTTP_') || %w[CONTENT_TYPE CONTENT_LENGTH].include?(k) },
+      ip_address: request.remote_ip,
+      user_agent: request.user_agent,
+      query_params: request.query_parameters.to_json,
+      content_type: request.content_type
+    )
+
+    render json: { success: true, message: "#{method_name} request recorded", payload: payload }, status: :ok
+  end
 end

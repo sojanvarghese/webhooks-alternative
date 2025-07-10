@@ -4,7 +4,7 @@ import axios from "axios";
 import { Toastr } from "@bigbinary/neetoui";
 import LandingPage from "./components/LandingPage";
 import MainLayout from "./components/MainLayout";
-import { createApiUrl } from "./config/api";
+import { createApiUrl, createWebhookUrl } from "./config/api";
 import "./App.css";
 
 // Helper to generate a UUID (v4)
@@ -177,7 +177,7 @@ Data: ${JSON.stringify(p.data, null, 2)}
   useEffect(() => {
     const newUuid = generateUUID();
     setUuid(newUuid);
-    const newUrl = createApiUrl(`/${newUuid}`);
+    const newUrl = createWebhookUrl(newUuid);
     setUrl(newUrl);
     setLoading(false);
   }, []);
