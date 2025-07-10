@@ -11,7 +11,7 @@
     "install:frontend": "cd webhooks-frontend && yarn install",
     "install:backend": "cd webhooks-backend && bundle install",
     "install:all": "yarn run install:frontend && yarn run install:backend",
-    "build:frontend": "cd webhooks-frontend && yarn run build",
+    "build:frontend": "cd webhooks-frontend && yarn install && yarn run build",
     "start:frontend": "cd webhooks-frontend && yarn run build && yarn dlx serve -s build -l 3000",
     "start:backend": "cd webhooks-backend && bundle exec rails server -p 3001 -b 0.0.0.0",
     "start": "yarn run start:frontend",
