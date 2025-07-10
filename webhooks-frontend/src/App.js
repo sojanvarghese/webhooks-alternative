@@ -1,18 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 // neetoUI styles imported in index.js
-import {
-  Spinner,
-  Button,
-  Toastr,
-  Input,
-  Tooltip,
-  Textarea,
-  Typography,
-  Select,
-} from "@bigbinary/neetoui";
-import { Copy, Sun, Moon } from "@bigbinary/neeto-icons";
-import NeetoWebhooksLogo from "./components/NeetoWebhooksLogo";
+import { Toastr } from "@bigbinary/neetoui";
 import LandingPage from "./components/LandingPage";
 import MainLayout from "./components/MainLayout";
 import { createApiUrl } from "./config/api";

@@ -14,9 +14,17 @@ const DashboardView = ({
   handleExportPDF,
   fetchPayloads,
   getMethodColor,
+  darkMode,
 }) => {
   return (
-    <section style={{ maxWidth: 1400, margin: "0 auto", padding: "2rem 1.5rem" }}>
+    <section style={{
+      maxWidth: 1400,
+      margin: "0 auto",
+      padding: "2rem 1.5rem",
+      minHeight: "calc(100vh - 140px)", // Ensure proper height calculation
+      display: "flex",
+      flexDirection: "column"
+    }}>
       <div
         style={{
           display: "flex",
@@ -24,6 +32,8 @@ const DashboardView = ({
           justifyContent: "center",
           alignItems: "flex-start",
           gap: "2rem",
+          flex: 1,
+          overflow: "hidden", // Prevent container overflow
         }}
       >
         {/* Left: Webhook endpoint info */}
@@ -37,8 +47,14 @@ const DashboardView = ({
             display: "flex",
             flexDirection: "column",
             height: "fit-content",
+            maxHeight: "calc(100vh - 200px)", // Prevent excessive height
             borderRadius: 12,
             padding: "2rem 1.5rem",
+            boxShadow: "0 2px 8px rgba(34, 197, 94, 0.04)",
+            backgroundColor: darkMode ? "#1f2937" : "#fff",
+            border: `1px solid ${darkMode ? "#374151" : "#E5E7EB"}`,
+            color: darkMode ? "#f9fafb" : "#111827",
+            transition: "all 0.2s ease",
           }}
         >
           {/* Title and description */}
@@ -46,7 +62,7 @@ const DashboardView = ({
             margin: "0 0 1rem 0",
             fontSize: "1.5rem",
             fontWeight: 600,
-            color: "#111827"
+            color: darkMode ? "#f9fafb" : "#111827"
           }}>
             Your webhook endpoint
           </h2>
@@ -54,7 +70,7 @@ const DashboardView = ({
             margin: "0 0 1.5rem 0",
             fontSize: "1rem",
             lineHeight: 1.6,
-            color: "#6b7280"
+            color: darkMode ? "#d1d5db" : "#6b7280"
           }}>
             Instantly get a unique, session-based webhook URL. Send any HTTP
             request to this endpoint and see it appear in the request history.
@@ -117,9 +133,9 @@ const DashboardView = ({
             </div>
           )}
 
-          {/* cURL Examples Section with scroll */}
+          {/* cURL Examples Section with controlled scroll */}
           {url && (
-            <div style={{ textAlign: "left", flex: 1 }}>
+            <div style={{ textAlign: "left", flex: 1, overflow: "hidden" }}>
               <h3 style={{
                 fontSize: "1.125rem",
                 fontWeight: 600,
@@ -133,9 +149,11 @@ const DashboardView = ({
               <div
                 className="curl-examples-scroll"
                 style={{
-                  maxHeight: "350px",
+                  maxHeight: "300px", // Reduced height to prevent overflow
                   overflowY: "auto",
                   paddingRight: "8px",
+                  scrollbarWidth: "thin",
+                  scrollbarColor: "#D1D5DB #F9FAFB"
                 }}
               >
                 <div style={{ marginBottom: 20 }}>
@@ -245,18 +263,21 @@ const DashboardView = ({
           )}
         </div>
 
-        {/* Right: Request history with enhanced scroll */}
+        {/* Right: Request history with better scroll management */}
         <div
-          className="app-card history-card"
+          className="app-card request-history-card"
           style={{
-            flex: 2,
-            minWidth: 450,
-            maxWidth: 900,
+            flex: 1,
+            minWidth: 600,
             display: "flex",
             flexDirection: "column",
-            height: "700px",
             borderRadius: 12,
             padding: "2rem 1.5rem",
+            maxHeight: "calc(100vh - 200px)", // Prevent excessive height
+            backgroundColor: darkMode ? "#1f2937" : "#fff",
+            border: `1px solid ${darkMode ? "#374151" : "#E5E7EB"}`,
+            color: darkMode ? "#f9fafb" : "#111827",
+            transition: "all 0.2s ease",
           }}
         >
           <div
@@ -272,7 +293,7 @@ const DashboardView = ({
               margin: 0,
               fontSize: "1.25rem",
               fontWeight: 600,
-              color: "#111827"
+              color: darkMode ? "#f9fafb" : "#111827"
             }}>
               Request History
             </h3>
@@ -294,7 +315,12 @@ const DashboardView = ({
             </div>
           </div>
 
-          <div style={{ flex: 1, overflow: "hidden" }}>
+          <div style={{
+            flex: 1,
+            overflow: "hidden",
+            display: "flex",
+            flexDirection: "column"
+          }}>
             {fetchingPayloads && payloads.length === 0 ? (
               <div
                 style={{
@@ -342,6 +368,8 @@ const DashboardView = ({
                   height: "100%",
                   overflowY: "auto",
                   paddingRight: "8px",
+                  scrollbarWidth: "thin",
+                  scrollbarColor: "#D1D5DB #F9FAFB"
                 }}
               >
                 {payloads.map((p, index) => (

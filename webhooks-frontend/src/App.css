@@ -137,6 +137,74 @@ main {
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
 }
 
+/* Ensure button colors are applied properly */
+.neeto-ui-button--primary {
+  background-color: #22C55E !important;
+  border-color: #22C55E !important;
+  color: #ffffff !important;
+}
+
+.neeto-ui-button--primary:hover {
+  background-color: #16A34A !important;
+  border-color: #16A34A !important;
+}
+
+[data-theme="dark"] .neeto-ui-button--primary {
+  background-color: #16A34A !important;
+  border-color: #16A34A !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .neeto-ui-button--primary:hover {
+  background-color: #15803D !important;
+  border-color: #15803D !important;
+}
+
+/* Force button styles for specific components */
+.landing-cta-button {
+  background-color: #22C55E !important;
+  border-color: #22C55E !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.landing-cta-button:hover {
+  background-color: #16A34A !important;
+  border-color: #16A34A !important;
+}
+
+[data-theme="dark"] .landing-cta-button {
+  background-color: #16A34A !important;
+  border-color: #16A34A !important;
+}
+
+[data-theme="dark"] .landing-cta-button:hover {
+  background-color: #15803D !important;
+  border-color: #15803D !important;
+}
+
+.composer-send-button {
+  background-color: #22C55E !important;
+  border-color: #22C55E !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.composer-send-button:hover {
+  background-color: #16A34A !important;
+  border-color: #16A34A !important;
+}
+
+[data-theme="dark"] .composer-send-button {
+  background-color: #16A34A !important;
+  border-color: #16A34A !important;
+}
+
+[data-theme="dark"] .composer-send-button:hover {
+  background-color: #15803D !important;
+  border-color: #15803D !important;
+}
+
 /* Scrollbar styling */
 .curl-examples-scroll::-webkit-scrollbar,
 .request-history-scroll::-webkit-scrollbar {

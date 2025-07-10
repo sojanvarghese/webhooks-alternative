@@ -12,18 +12,26 @@ const ComposerView = ({
   composerSending,
   handleSendComposerRequest,
   composerResponse,
+  darkMode,
 }) => {
   return (
     <section style={{ maxWidth: 1400, margin: "0 auto", padding: "2rem 1.5rem" }}>
       <div
         className="app-card composer-card"
-        style={{ borderRadius: 12, padding: "2rem" }}
+        style={{
+          borderRadius: 12,
+          padding: "2rem",
+          backgroundColor: darkMode ? "#1f2937" : "#fff",
+          border: `1px solid ${darkMode ? "#374151" : "#E5E7EB"}`,
+          color: darkMode ? "#f9fafb" : "#111827",
+          transition: "all 0.2s ease",
+        }}
       >
         <h3 style={{
           margin: "0 0 1rem 0",
           fontSize: "1.5rem",
           fontWeight: 600,
-          color: "#111827"
+          color: darkMode ? "#f9fafb" : "#111827"
         }}>
           Request Composer
         </h3>
@@ -31,7 +39,7 @@ const ComposerView = ({
           margin: "0 0 1.5rem 0",
           fontSize: "1rem",
           lineHeight: 1.6,
-          color: "#6b7280"
+          color: darkMode ? "#d1d5db" : "#6b7280"
         }}>
           Compose and send HTTP requests to any destination. Test your
           webhooks, APIs, or third-party integrations.
@@ -53,7 +61,7 @@ const ComposerView = ({
                 fontSize: "0.875rem",
                 fontWeight: 500,
                 margin: "0 0 0.75rem 0",
-                color: "#374151"
+                color: darkMode ? "#f9fafb" : "#374151"
               }}>
                 HTTP Method
               </label>
@@ -80,7 +88,7 @@ const ComposerView = ({
                 fontSize: "0.875rem",
                 fontWeight: 500,
                 margin: "0 0 0.75rem 0",
-                color: "#374151"
+                color: darkMode ? "#f9fafb" : "#374151"
               }}>
                 Destination URL
               </label>
@@ -100,8 +108,10 @@ const ComposerView = ({
                 loading={composerSending}
                 onClick={handleSendComposerRequest}
                 disabled={composerSending || !composerUrl.trim()}
-                style={{ width: "100%" }}
-                className="gradient-primary-button"
+                className="composer-send-button"
+                style={{
+                  width: "100%"
+                }}
                 size="large"
               />
             </div>
@@ -114,7 +124,7 @@ const ComposerView = ({
               fontSize: "0.875rem",
               fontWeight: 500,
               margin: "0 0 0.75rem 0",
-              color: "#374151"
+              color: darkMode ? "#f9fafb" : "#374151"
             }}>
               Request Body (JSON)
             </label>

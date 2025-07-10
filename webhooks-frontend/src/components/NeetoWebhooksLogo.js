@@ -1,23 +1,13 @@
 import React from "react";
 
-// NeetoWebhooksLogo component renders the logo with a webhook-themed SVG and brand text
-const NeetoWebhooksLogo = ({ size = "default" }) => {
-  // Size configurations for different logo sizes
-  const sizes = {
-    small: { width: "120", height: "30", textClass: "text-sm" },
-    default: { width: "200", height: "50", textClass: "text-base" },
-    large: { width: "280", height: "70", textClass: "text-lg" },
-  };
-
-  // Get text class based on the size prop (currently unused but reserved for future sizing)
-  // const { textClass } = sizes[size] || sizes.default;
-
+// NeetoWebhooksLogo component renders the logo with a webhook-themed SVG and optional brand text
+const NeetoWebhooksLogo = ({ size = 32, showText = true }) => {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
       {/* SVG icon representing webhook connections */}
       <svg
-        width={32}
-        height={32}
+        width={size}
+        height={size}
         viewBox="0 0 45 45"
         fill="none"
         className="flex-shrink-0"
@@ -43,19 +33,21 @@ const NeetoWebhooksLogo = ({ size = "default" }) => {
         <circle cx="12" cy="33" r="1.5" fill="#22C55E" />
         <circle cx="33" cy="33" r="1.5" fill="#22C55E" />
       </svg>
-      {/* Brand text for NeetoWebhooks */}
-      <span
-        style={{
-          fontFamily:
-            "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-          fontSize: "18px",
-          fontWeight: 700,
-          color: "var(--neeto-ui-gray-900)",
-          letterSpacing: "-0.025em",
-        }}
-      >
-        NeetoWebhooks
-      </span>
+      {/* Brand text for NeetoWebhooks, shown only if showText is true */}
+      {showText && (
+        <span
+          style={{
+            fontFamily:
+              "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+            fontSize: size * 0.56,
+            fontWeight: 700,
+            color: "var(--neeto-ui-gray-900)",
+            letterSpacing: "-0.025em",
+          }}
+        >
+          NeetoWebhooks
+        </span>
+      )}
     </div>
   );
 };
