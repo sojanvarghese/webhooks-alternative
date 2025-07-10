@@ -167,9 +167,18 @@ class EndpointController < ApplicationController
         render json: { error: "Unsupported HTTP method" }, status: :bad_request and return
       end
 
-      # Set headers
+      # Set headers (filter out unsafe headers that browsers don't allow)
+      unsafe_headers = %w[
+        Accept-Charset Accept-Encoding Access-Control-Request-Headers
+        Access-Control-Request-Method Connection Content-Length Cookie
+        Cookie2 Date DNT Expect Host Keep-Alive Origin Referer
+        TE Trailer Transfer-Encoding Upgrade User-Agent Via
+      ].map(&:downcase)
+
       headers.each do |key, value|
-        request[key] = value
+        unless unsafe_headers.include?(key.downcase)
+          request[key] = value
+        end
       end
 
       # Set body for non-GET requests

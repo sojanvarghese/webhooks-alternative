@@ -4,7 +4,7 @@
 /**
  * Get the backend API base URL based on the current environment
  * In development: uses localhost:3001
- * In production: uses the same domain (proxied through the main server)
+ * In production: uses the same domain but with port 3001 for NeetoDeploy
  */
 export const getApiBaseUrl = () => {
   // Check if we're in development mode
@@ -12,15 +12,22 @@ export const getApiBaseUrl = () => {
     return "http://localhost:3001";
   }
 
-  // In production, use the same origin (requests will be proxied)
-  return window.location.origin;
+  // In production, check if we're on NeetoDeploy
+  const origin = window.location.origin;
+  if (origin.includes('neetodeployapp.com')) {
+    // NeetoDeploy: Backend runs on port 3001, frontend on port 3000
+    return `${origin.replace(':3000', '')}:3001`;
+  }
+
+  // For other production environments, use the same origin
+  return origin;
 };
 
 /**
  * Get the webhook endpoint base URL
  * This is where external services should send webhook requests
  * In development: uses localhost:3001
- * In production: uses the same domain as the app
+ * In production: uses the same domain but with port 3001 for NeetoDeploy
  */
 export const getWebhookBaseUrl = () => {
   // Check if we're in development mode
@@ -28,8 +35,15 @@ export const getWebhookBaseUrl = () => {
     return "http://localhost:3001";
   }
 
-  // In production, use the same origin
-  return window.location.origin;
+  // In production, check if we're on NeetoDeploy
+  const origin = window.location.origin;
+  if (origin.includes('neetodeployapp.com')) {
+    // NeetoDeploy: Backend runs on port 3001, frontend on port 3000
+    return `${origin.replace(':3000', '')}:3001`;
+  }
+
+  // For other production environments, use the same origin
+  return origin;
 };
 
 /**
