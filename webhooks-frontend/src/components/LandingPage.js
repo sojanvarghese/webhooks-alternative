@@ -299,7 +299,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
                   lineHeight: 1.2,
                 }}
               >
-                Debug & Test
+                Request Composer
               </h3>
               <p
                 style={{
