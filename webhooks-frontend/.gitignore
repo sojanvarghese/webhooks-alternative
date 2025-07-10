@@ -21,6 +21,3 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# Auto-generated neetoUI CSS file (copied from node_modules)
-src/neetoui.css

@@ -1,10 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-// NeetoUI CSS imported locally due to React build restrictions
-// The CSS file is automatically copied from node_modules via scripts in package.json
-// This solves the issue where React cannot resolve @bigbinary/neetoui/dist/index.css
-import "./neetoui.css";
+import "../node_modules/@bigbinary/neetoui/dist/index.css"; // neetoUI styles
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
