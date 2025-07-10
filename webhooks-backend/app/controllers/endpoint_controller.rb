@@ -115,6 +115,115 @@ class EndpointController < ApplicationController
     handle_webhook_request('DELETE')
   end
 
+  # POST /proxy
+  # Proxy method to handle outbound HTTP requests from the Request Composer
+  # This allows the frontend to make requests to external URLs without CORS issues
+  def proxy_request
+    begin
+      # Get request parameters
+      url = params[:url]
+      method = params[:method] || 'GET'
+      headers = params[:headers] || {}
+      body_data = params[:body]
+
+      # Validate required parameters
+      if url.blank?
+        render json: { error: "URL is required" }, status: :bad_request and return
+      end
+
+      # Validate URL format
+      begin
+        uri = URI.parse(url)
+        unless uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
+          render json: { error: "Invalid URL format" }, status: :bad_request and return
+        end
+      rescue URI::InvalidURIError
+        render json: { error: "Invalid URL format" }, status: :bad_request and return
+      end
+
+      # Make the HTTP request
+      require 'net/http'
+      require 'json'
+
+      uri = URI.parse(url)
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = uri.scheme == 'https'
+      http.read_timeout = 30
+      http.open_timeout = 30
+
+      # Create the request
+      case method.upcase
+      when 'GET'
+        request = Net::HTTP::Get.new(uri.request_uri)
+      when 'POST'
+        request = Net::HTTP::Post.new(uri.request_uri)
+      when 'PUT'
+        request = Net::HTTP::Put.new(uri.request_uri)
+      when 'PATCH'
+        request = Net::HTTP::Patch.new(uri.request_uri)
+      when 'DELETE'
+        request = Net::HTTP::Delete.new(uri.request_uri)
+      else
+        render json: { error: "Unsupported HTTP method" }, status: :bad_request and return
+      end
+
+      # Set headers
+      headers.each do |key, value|
+        request[key] = value
+      end
+
+      # Set body for non-GET requests
+      if method.upcase != 'GET' && body_data.present?
+        if body_data.is_a?(Hash) || body_data.is_a?(Array)
+          request.body = body_data.to_json
+          request['Content-Type'] = 'application/json' unless request['Content-Type']
+        else
+          request.body = body_data.to_s
+        end
+      end
+
+      # Execute the request
+      response = http.request(request)
+
+      # Parse response body
+      response_body = response.body
+      begin
+        parsed_body = JSON.parse(response_body) if response_body.present?
+      rescue JSON::ParserError
+        parsed_body = response_body
+      end
+
+      # Return response
+      render json: {
+        success: response.code.to_i < 400,
+        status: response.code.to_i,
+        statusText: response.message,
+        data: parsed_body,
+        headers: response.to_hash,
+        timestamp: Time.current.iso8601
+      }
+
+    rescue Net::TimeoutError
+      render json: {
+        success: false,
+        error: "Request timeout",
+        timestamp: Time.current.iso8601
+      }, status: :request_timeout
+    rescue Net::HTTPError => e
+      render json: {
+        success: false,
+        error: "HTTP error: #{e.message}",
+        timestamp: Time.current.iso8601
+      }, status: :bad_gateway
+    rescue StandardError => e
+      render json: {
+        success: false,
+        error: "Request failed: #{e.message}",
+        timestamp: Time.current.iso8601
+      }, status: :internal_server_error
+    end
+  end
+
   # Fallback method for requests that should be handled by frontend
   # This indicates a configuration issue but provides a helpful response
   def frontend_fallback

@@ -42,22 +42,18 @@ export const createApiUrl = (endpoint) => {
   // Ensure endpoint starts with /
   const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
 
-  // In development, use direct backend URL
-  if (process.env.NODE_ENV === "development") {
-    return `${baseUrl}${cleanEndpoint}`;
-  }
-
-  // In production, add /api prefix for proxied requests (except for webhook endpoints)
-  // Webhook endpoints (UUID pattern) should go directly to the backend
+  // Check if this is a webhook endpoint (UUID pattern)
   const isWebhookEndpoint =
     /^\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/.test(
       cleanEndpoint
     );
 
+  // Webhook endpoints go directly to the backend without /api prefix
   if (isWebhookEndpoint) {
     return `${baseUrl}${cleanEndpoint}`;
   }
 
+  // All other endpoints (including /proxy) get /api prefix in both development and production
   return `${baseUrl}/api${cleanEndpoint}`;
 };
 

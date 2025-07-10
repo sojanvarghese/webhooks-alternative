@@ -75,31 +75,44 @@ function MainApp({ darkMode, toggleDarkMode }) {
         }
       }
 
-      const config = {
+      // Use backend proxy to avoid CORS issues
+      const proxyPayload = {
         method: composerMethod,
         url: composerUrl,
         headers: {
           "Content-Type": "application/json",
         },
-        timeout: 30000,
+        body: composerMethod !== "GET" && Object.keys(requestData).length > 0 ? requestData : null,
       };
 
-      if (composerMethod !== "GET" && Object.keys(requestData).length > 0) {
-        config.data = requestData;
-      }
+      const response = await axios.post(
+        createApiUrl("/proxy"),
+        proxyPayload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          timeout: 30000,
+        }
+      );
 
-      const response = await axios(config);
+      // Extract the response data from the proxy response
+      const proxyResponse = response.data;
 
       setComposerResponse({
-        success: true,
-        status: response.status,
-        statusText: response.statusText,
-        data: response.data,
-        headers: response.headers,
-        timestamp: new Date().toISOString(),
+        success: proxyResponse.success,
+        status: proxyResponse.status,
+        statusText: proxyResponse.statusText,
+        data: proxyResponse.data,
+        headers: proxyResponse.headers,
+        timestamp: proxyResponse.timestamp,
       });
 
-      Toastr.success("Request sent successfully!");
+      if (proxyResponse.success) {
+        Toastr.success("Request sent successfully!");
+      } else {
+        Toastr.error(`Request failed: ${proxyResponse.error || "Unknown error"}`);
+      }
     } catch (error) {
       setComposerResponse({
         success: false,
