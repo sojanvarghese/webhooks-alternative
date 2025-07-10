@@ -1,6 +1,6 @@
 import React from "react";
-import { Button, Spinner, Input, Tooltip } from "@bigbinary/neetoui";
-import { Copy } from "@bigbinary/neeto-icons";
+import { Button, Spinner, Input, Tooltip, NoData, Accordion, Toastr } from "@bigbinary/neetoui";
+import { Copy, Code } from "@bigbinary/neeto-icons";
 import JsonViewer from "./JsonViewer";
 
 const DashboardView = ({
@@ -16,12 +16,19 @@ const DashboardView = ({
   getMethodColor,
   darkMode,
 }) => {
+
+  // Enhanced copy handler with Toastr notification
+  const handleCopyWithNotification = () => {
+    handleCopy();
+    Toastr.success("Webhook URL copied to clipboard!", { autoClose: 2000 });
+  };
+
   return (
     <section style={{
       maxWidth: 1400,
       margin: "0 auto",
       padding: "2rem 1.5rem",
-      minHeight: "calc(100vh - 140px)", // Ensure proper height calculation
+      minHeight: "calc(100vh - 140px)",
       display: "flex",
       flexDirection: "column"
     }}>
@@ -33,12 +40,11 @@ const DashboardView = ({
           alignItems: "flex-start",
           gap: "2rem",
           flex: 1,
-          overflow: "hidden", // Prevent container overflow
+          overflow: "hidden",
         }}
       >
         {/* Left: Webhook endpoint info */}
         <div
-          className="app-card endpoint-card"
           style={{
             flex: 1,
             minWidth: 320,
@@ -47,30 +53,32 @@ const DashboardView = ({
             display: "flex",
             flexDirection: "column",
             height: "fit-content",
-            maxHeight: "calc(100vh - 200px)", // Prevent excessive height
-            borderRadius: 12,
-            padding: "2rem 1.5rem",
-            boxShadow: "0 2px 8px rgba(34, 197, 94, 0.04)",
-            backgroundColor: darkMode ? "#1f2937" : "#fff",
-            border: `1px solid ${darkMode ? "#374151" : "#E5E7EB"}`,
-            color: darkMode ? "#f9fafb" : "#111827",
+            maxHeight: "calc(100vh - 200px)",
+            borderRadius: "var(--neeto-ui-rounded-lg)",
+            padding: "var(--neeto-ui-spacing-8) var(--neeto-ui-spacing-6)",
+            boxShadow: "var(--neeto-ui-shadow-md)",
+            backgroundColor: "rgb(var(--neeto-ui-white))",
+            border: "1px solid rgb(var(--neeto-ui-gray-300))",
+            color: "rgb(var(--neeto-ui-gray-800))",
             transition: "all 0.2s ease",
           }}
         >
-          {/* Title and description */}
+          {/* Enhanced Typography */}
           <h2 style={{
-            margin: "0 0 1rem 0",
-            fontSize: "1.5rem",
-            fontWeight: 600,
-            color: darkMode ? "#f9fafb" : "#111827"
+            margin: "0 0 var(--neeto-ui-spacing-4) 0",
+            fontSize: "var(--neeto-ui-text-xl)",
+            fontWeight: "var(--neeto-ui-font-semibold)",
+            color: "rgb(var(--neeto-ui-gray-900))",
+            textAlign: "center"
           }}>
             Your webhook endpoint
           </h2>
           <p style={{
-            margin: "0 0 1.5rem 0",
-            fontSize: "1rem",
-            lineHeight: 1.6,
-            color: darkMode ? "#d1d5db" : "#6b7280"
+            margin: "0 0 var(--neeto-ui-spacing-6) 0",
+            fontSize: "var(--neeto-ui-text-base)",
+            lineHeight: "var(--neeto-ui-line-height-relaxed)",
+            color: "rgb(var(--neeto-ui-gray-600))",
+            textAlign: "center"
           }}>
             Instantly get a unique, session-based webhook URL. Send any HTTP
             request to this endpoint and see it appear in the request history.
@@ -79,17 +87,17 @@ const DashboardView = ({
 
           {/* Endpoint URL and copy button */}
           {loading ? (
-            <div style={{ padding: "2rem 0" }}>
+            <div style={{ padding: "var(--neeto-ui-spacing-8) 0" }}>
               <Spinner size="large" />
             </div>
           ) : error ? (
             <div style={{
-              color: "#dc2626",
-              fontSize: "1rem",
-              padding: "1rem",
-              backgroundColor: "#fef2f2",
-              borderRadius: "8px",
-              border: "1px solid #fecaca"
+              color: "rgb(var(--neeto-ui-error-600))",
+              fontSize: "var(--neeto-ui-text-base)",
+              padding: "var(--neeto-ui-spacing-4)",
+              backgroundColor: "rgb(var(--neeto-ui-error-50))",
+              borderRadius: "var(--neeto-ui-rounded)",
+              border: "1px solid rgb(var(--neeto-ui-error-200))"
             }}>
               {error}
             </div>
@@ -98,11 +106,11 @@ const DashboardView = ({
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 16,
+                gap: "var(--neeto-ui-spacing-4)",
                 width: "100%",
                 maxWidth: 500,
                 margin: "0 auto",
-                marginBottom: "2rem",
+                marginBottom: "var(--neeto-ui-spacing-8)",
               }}
             >
               <div style={{ flex: 1 }}>
@@ -113,7 +121,7 @@ const DashboardView = ({
                   style={{
                     fontWeight: 600,
                     fontSize: 14,
-                    fontFamily: "monospace"
+                    fontFamily: "var(--neeto-ui-font-mono)"
                   }}
                   aria-label="Webhook endpoint URL"
                 />
@@ -123,9 +131,9 @@ const DashboardView = ({
                 position="bottom"
               >
                 <Button
-                  variant="secondary"
+                  style="secondary"
                   icon={Copy}
-                  onClick={handleCopy}
+                  onClick={handleCopyWithNotification}
                   aria-label="Copy webhook endpoint"
                   size="large"
                 />
@@ -133,97 +141,75 @@ const DashboardView = ({
             </div>
           )}
 
-          {/* cURL Examples Section with controlled scroll */}
+          {/* Enhanced cURL Examples with Accordion */}
           {url && (
             <div style={{ textAlign: "left", flex: 1, overflow: "hidden" }}>
-              <h3 style={{
-                fontSize: "1.125rem",
-                fontWeight: 600,
-                margin: "0 0 1rem 0",
+              <h4 style={{
+                fontSize: "var(--neeto-ui-text-lg)",
+                fontWeight: "var(--neeto-ui-font-semibold)",
+                margin: "0 0 var(--neeto-ui-spacing-4) 0",
                 textAlign: "center",
-                color: "#059669"
+                color: "rgb(var(--neeto-ui-gray-900))",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "var(--neeto-ui-spacing-2)"
               }}>
+                <Code size={20} />
                 cURL Examples
-              </h3>
+              </h4>
 
-              <div
-                className="curl-examples-scroll"
-                style={{
-                  maxHeight: "300px", // Reduced height to prevent overflow
-                  overflowY: "auto",
-                  paddingRight: "8px",
-                  scrollbarWidth: "thin",
-                  scrollbarColor: "#D1D5DB #F9FAFB"
-                }}
-              >
-                <div style={{ marginBottom: 20 }}>
-                  <p style={{
-                    fontSize: "0.875rem",
-                    fontWeight: 500,
-                    margin: "0 0 0.5rem 0",
-                    color: "#374151"
-                  }}>
-                    POST with JSON payload:
-                  </p>
+              <Accordion>
+                <Accordion.Item title="POST with JSON payload">
                   <pre
-                    className="code-block"
                     style={{
                       margin: 0,
-                      padding: 16,
-                      borderRadius: 8,
-                      fontSize: 12,
-                      lineHeight: 1.5,
+                      padding: "var(--neeto-ui-spacing-4)",
+                      borderRadius: "var(--neeto-ui-rounded)",
+                      fontSize: "var(--neeto-ui-text-sm)",
+                      lineHeight: "var(--neeto-ui-line-height-relaxed)",
                       overflow: "auto",
+                      backgroundColor: "rgb(var(--neeto-ui-gray-900))",
+                      color: "rgb(var(--neeto-ui-gray-100))",
+                      fontFamily: "var(--neeto-ui-font-mono)",
                     }}
                   >
                     {`curl -X POST "${url}" \\
   -H "Content-Type: application/json" \\
   -d '{"event": "test", "data": {"key": "value"}}'`}
                   </pre>
-                </div>
+                </Accordion.Item>
 
-                <div style={{ marginBottom: 20 }}>
-                  <p style={{
-                    fontSize: "0.875rem",
-                    fontWeight: 500,
-                    margin: "0 0 0.5rem 0",
-                    color: "#374151"
-                  }}>
-                    GET with query parameters:
-                  </p>
+                <Accordion.Item title="GET with query parameters">
                   <pre
-                    className="code-block"
                     style={{
                       margin: 0,
-                      padding: 16,
-                      borderRadius: 8,
-                      fontSize: 12,
-                      lineHeight: 1.5,
+                      padding: "var(--neeto-ui-spacing-4)",
+                      borderRadius: "var(--neeto-ui-rounded)",
+                      fontSize: "var(--neeto-ui-text-sm)",
+                      lineHeight: "var(--neeto-ui-line-height-relaxed)",
                       overflow: "auto",
+                      backgroundColor: "rgb(var(--neeto-ui-gray-900))",
+                      color: "rgb(var(--neeto-ui-gray-100))",
+                      fontFamily: "var(--neeto-ui-font-mono)",
                     }}
                   >
                     {`curl -X GET "${url}?source=test&action=webhook"`}
                   </pre>
-                </div>
+                </Accordion.Item>
 
-                <div style={{ marginBottom: 20 }}>
-                  <p style={{
-                    fontSize: "0.875rem",
-                    fontWeight: 500,
-                    margin: "0 0 0.5rem 0",
-                    color: "#374151"
-                  }}>
-                    POST with custom headers:
-                  </p>
+                <Accordion.Item title="POST with custom headers">
                   <pre
-                    className="code-block"
                     style={{
                       margin: 0,
-                      padding: 16,
-                      borderRadius: 8,
-                      fontSize: 12,
-                      lineHeight: 1.5,
+                      padding: "var(--neeto-ui-spacing-4)",
+                      borderRadius: "var(--neeto-ui-rounded)",
+                      fontSize: "var(--neeto-ui-text-sm)",
+                      lineHeight: "var(--neeto-ui-line-height-relaxed)",
                       overflow: "auto",
+                      backgroundColor: "rgb(var(--neeto-ui-gray-900))",
+                      color: "rgb(var(--neeto-ui-gray-100))",
+                      fontFamily: "var(--neeto-ui-font-mono)",
                     }}
                   >
                     {`curl -X POST "${url}" \\
@@ -231,53 +217,47 @@ const DashboardView = ({
   -H "X-Webhook-Source: your-app" \\
   -d '{"timestamp": "${new Date().toISOString()}"}'`}
                   </pre>
-                </div>
+                </Accordion.Item>
 
-                <div>
-                  <p style={{
-                    fontSize: "0.875rem",
-                    fontWeight: 500,
-                    margin: "0 0 0.5rem 0",
-                    color: "#374151"
-                  }}>
-                    PUT request:
-                  </p>
+                <Accordion.Item title="PUT request">
                   <pre
-                    className="code-block"
                     style={{
                       margin: 0,
-                      padding: 16,
-                      borderRadius: 8,
-                      fontSize: 12,
-                      lineHeight: 1.5,
+                      padding: "var(--neeto-ui-spacing-4)",
+                      borderRadius: "var(--neeto-ui-rounded)",
+                      fontSize: "var(--neeto-ui-text-sm)",
+                      lineHeight: "var(--neeto-ui-line-height-relaxed)",
                       overflow: "auto",
+                      backgroundColor: "rgb(var(--neeto-ui-gray-900))",
+                      color: "rgb(var(--neeto-ui-gray-100))",
+                      fontFamily: "var(--neeto-ui-font-mono)",
                     }}
                   >
                     {`curl -X PUT "${url}" \\
   -H "Content-Type: application/json" \\
   -d '{"updated_at": "${new Date().toISOString()}"}'`}
                   </pre>
-                </div>
-              </div>
+                </Accordion.Item>
+              </Accordion>
             </div>
           )}
         </div>
 
-        {/* Right: Request history with better scroll management */}
+        {/* Right: Request history with enhanced NoData */}
         <div
-          className="app-card request-history-card"
           style={{
             flex: 1,
             minWidth: 600,
             display: "flex",
             flexDirection: "column",
-            borderRadius: 12,
-            padding: "2rem 1.5rem",
-            maxHeight: "calc(100vh - 200px)", // Prevent excessive height
-            backgroundColor: darkMode ? "#1f2937" : "#fff",
-            border: `1px solid ${darkMode ? "#374151" : "#E5E7EB"}`,
-            color: darkMode ? "#f9fafb" : "#111827",
+            borderRadius: "var(--neeto-ui-rounded-lg)",
+            padding: "var(--neeto-ui-spacing-8) var(--neeto-ui-spacing-6)",
+            maxHeight: "calc(100vh - 200px)",
+            backgroundColor: "rgb(var(--neeto-ui-white))",
+            border: "1px solid rgb(var(--neeto-ui-gray-300))",
+            color: "rgb(var(--neeto-ui-gray-800))",
             transition: "all 0.2s ease",
+            boxShadow: "var(--neeto-ui-shadow-md)",
           }}
         >
           <div
@@ -285,29 +265,29 @@ const DashboardView = ({
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              marginBottom: 24,
+              marginBottom: "var(--neeto-ui-spacing-6)",
               flexShrink: 0,
             }}
           >
             <h3 style={{
               margin: 0,
-              fontSize: "1.25rem",
-              fontWeight: 600,
-              color: darkMode ? "#f9fafb" : "#111827"
+              fontSize: "var(--neeto-ui-text-xl)",
+              fontWeight: "var(--neeto-ui-font-semibold)",
+              color: "rgb(var(--neeto-ui-gray-900))"
             }}>
               Request History
             </h3>
-            <div style={{ display: "flex", gap: 12 }}>
+            <div style={{ display: "flex", gap: "var(--neeto-ui-spacing-3)" }}>
               <Button
                 label="Export Data"
-                variant="secondary"
+                style="secondary"
                 size="small"
                 onClick={handleExportPDF}
                 disabled={payloads.length === 0}
               />
               <Button
                 label="Refresh"
-                variant="secondary"
+                style="secondary"
                 size="small"
                 onClick={fetchPayloads}
                 loading={fetchingPayloads}
@@ -344,22 +324,24 @@ const DashboardView = ({
                   padding: "3rem",
                 }}
               >
-                <h4 style={{
-                  margin: "0 0 1rem 0",
-                  fontSize: "1.125rem",
-                  fontWeight: 600,
-                  color: "#111827"
-                }}>
-                  No requests yet
-                </h4>
-                <p style={{
-                  margin: 0,
-                  fontSize: "1rem",
-                  lineHeight: 1.6,
-                  color: "#6b7280"
-                }}>
-                  Send a request to your endpoint to see it appear here
-                </p>
+                <NoData
+                  title="No requests yet"
+                  description="Send a request to your endpoint to see it appear here"
+                  image={
+                    <div style={{
+                      width: 80,
+                      height: 80,
+                      borderRadius: "50%",
+                      backgroundColor: "rgb(var(--neeto-ui-primary-100))",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      margin: "0 auto 1rem"
+                    }}>
+                      <Code size={40} color="rgb(var(--neeto-ui-primary-500))" />
+                    </div>
+                  }
+                />
               </div>
             ) : (
               <div
@@ -375,13 +357,15 @@ const DashboardView = ({
                 {payloads.map((p, index) => (
                   <div
                     key={index}
-                    className="app-card"
                     style={{
-                      marginBottom: 20,
-                      padding: 20,
-                      borderRadius: 8,
-                      fontSize: 14,
+                      marginBottom: "var(--neeto-ui-spacing-5)",
+                      padding: "var(--neeto-ui-spacing-5)",
+                      borderRadius: "var(--neeto-ui-rounded-lg)",
+                      fontSize: "var(--neeto-ui-text-sm)",
                       transition: "all 0.2s ease",
+                      backgroundColor: "rgb(var(--neeto-ui-white))",
+                      border: "1px solid rgb(var(--neeto-ui-gray-300))",
+                      boxShadow: "var(--neeto-ui-shadow-sm)",
                     }}
                   >
                     {/* Request header */}

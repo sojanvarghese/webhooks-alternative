@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button } from "@bigbinary/neetoui";
+import { Button, Tab } from "@bigbinary/neetoui";
 import { Sun, Moon } from "@bigbinary/neeto-icons";
 import NeetoWebhooksLogo from "./NeetoWebhooksLogo";
 import DashboardView from "./DashboardView";
@@ -33,226 +33,167 @@ const MainLayout = ({
   const [activeTab, setActiveTab] = useState("dashboard");
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh" }}>
-      {/* Sidebar */}
-      <aside
+    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      {/* Header with logo, tabs, and dark mode toggle */}
+      <header
         style={{
-          width: "250px",
-          backgroundColor: "#1f2937",
-          color: "#ffffff",
           display: "flex",
-          flexDirection: "column",
-          paddingTop: "1.5rem",
-          paddingBottom: "1.5rem",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "1rem 2rem",
+          borderBottom: `1px solid ${darkMode ? "#374151" : "#e5e7eb"}`,
+          backgroundColor: darkMode ? "#1f2937" : "#ffffff",
+          color: darkMode ? "#f9fafb" : "#111827",
+          transition: "all 0.2s ease",
         }}
       >
-        {/* Logo */}
-        <div
-          style={{
-            padding: "0 1.5rem 2rem 1.5rem",
-            borderBottom: "1px solid #374151",
-            marginBottom: "1.5rem",
-          }}
-        >
-          <div
-            style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}
-          >
-            {/* Sidebar logo: icon only, no text */}
+        {/* Left side: Logo and brand */}
+        <div style={{ display: "flex", alignItems: "center", gap: "2rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
             <NeetoWebhooksLogo size={32} showText={false} />
             <span
               style={{
                 fontSize: "1.125rem",
                 fontWeight: 600,
-                color: "#ffffff",
+                color: darkMode ? "#f9fafb" : "#111827",
               }}
             >
               NeetoWebhooks
             </span>
           </div>
+
+          {/* Navigation tabs */}
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Tab
+              style={{
+                "--neeto-ui-tab-active-color": "rgb(var(--neeto-ui-primary-500))",
+                "--neeto-ui-tab-active-border-color": "rgb(var(--neeto-ui-primary-500))",
+              }}
+            >
+              <Tab.Item
+                id="dashboard"
+                label="Dashboard"
+                onClick={() => setActiveTab("dashboard")}
+                active={activeTab === "dashboard"}
+              />
+              <Tab.Item
+                id="composer"
+                label="Request Composer"
+                onClick={() => setActiveTab("composer")}
+                active={activeTab === "composer"}
+              />
+            </Tab>
+          </div>
         </div>
 
-        {/* Navigation */}
-        <nav style={{ flex: 1, padding: "0 1rem" }}>
-          <button
-            style={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.75rem",
-              padding: "0.75rem 1rem",
-              marginBottom: "0.5rem",
-              borderRadius: "8px",
-              border: "none",
-              backgroundColor:
-                activeTab === "dashboard" ? "#059669" : "transparent",
-              color: "#ffffff",
-              fontSize: "0.875rem",
-              fontWeight: 500,
-              cursor: "pointer",
-              transition: "all 0.2s ease",
-            }}
-            onClick={() => setActiveTab("dashboard")}
-            onMouseEnter={(e) => {
-              if (activeTab !== "dashboard") {
-                e.target.style.backgroundColor = "#374151";
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (activeTab !== "dashboard") {
-                e.target.style.backgroundColor = "transparent";
-              }
-            }}
-          >
-            Dashboard
-          </button>
-
-          <button
-            style={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.75rem",
-              padding: "0.75rem 1rem",
-              marginBottom: "0.5rem",
-              borderRadius: "8px",
-              border: "none",
-              backgroundColor:
-                activeTab === "composer" ? "#059669" : "transparent",
-              color: "#ffffff",
-              fontSize: "0.875rem",
-              fontWeight: 500,
-              cursor: "pointer",
-              transition: "all 0.2s ease",
-            }}
-            onClick={() => setActiveTab("composer")}
-            onMouseEnter={(e) => {
-              if (activeTab !== "composer") {
-                e.target.style.backgroundColor = "#374151";
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (activeTab !== "composer") {
-                e.target.style.backgroundColor = "transparent";
-              }
-            }}
-          >
-            Request Composer
-          </button>
-        </nav>
-
-        {/* Footer */}
-        <div
+        {/* Right side: Dark mode toggle */}
+        <Button
+          variant="text"
+          icon={darkMode ? Sun : Moon}
+          onClick={toggleDarkMode}
+          aria-label={
+            darkMode ? "Switch to light mode" : "Switch to dark mode"
+          }
+          size="small"
           style={{
-            padding: "1rem 1.5rem",
-            borderTop: "1px solid #374151",
-            fontSize: "0.75rem",
-            color: "#9ca3af",
+            padding: "0.5rem",
+            minWidth: "auto",
+            width: "2.5rem",
+            height: "2.5rem",
+            borderRadius: "6px",
+          }}
+        />
+      </header>
+
+      {/* Sub-header with title and description */}
+      <div
+        style={{
+          padding: "1.5rem 2rem",
+          borderBottom: `1px solid ${darkMode ? "#374151" : "#e5e7eb"}`,
+          backgroundColor: darkMode ? "#111827" : "#f9fafb",
+          color: darkMode ? "#f9fafb" : "#111827",
+          transition: "all 0.2s ease",
+        }}
+      >
+        <h1
+          style={{
+            margin: "0 0 0.5rem 0",
+            fontSize: "1.75rem",
+            fontWeight: 600,
+            color: darkMode ? "#f9fafb" : "#111827",
           }}
         >
-          Neeto Webhooks
-          <br />
-          v1.0.0
-        </div>
-      </aside>
+          {activeTab === "dashboard"
+            ? "Webhook Dashboard"
+            : "Request Composer"}
+        </h1>
+        <p
+          style={{
+            margin: 0,
+            fontSize: "1rem",
+            color: darkMode ? "#d1d5db" : "#6b7280",
+            lineHeight: 1.5,
+          }}
+        >
+          {activeTab === "dashboard"
+            ? "Monitor incoming webhook requests in real-time"
+            : "Send custom HTTP requests to test endpoints"}
+        </p>
+      </div>
 
       {/* Main Content */}
-      <main style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        {/* Header */}
-        <header
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "1rem 2rem",
-            borderBottom: `1px solid ${darkMode ? "#374151" : "#e5e7eb"}`,
-            backgroundColor: darkMode ? "#1f2937" : "#ffffff",
-            color: darkMode ? "#f9fafb" : "#111827",
-            transition: "all 0.2s ease",
-          }}
-        >
-          <div>
-            <h1
-              style={{
-                margin: 0,
-                fontSize: "1.5rem",
-                fontWeight: 600,
-                color: darkMode ? "#f9fafb" : "#111827",
-              }}
-            >
-              {activeTab === "dashboard"
-                ? "Webhook Dashboard"
-                : "Request Composer"}
-            </h1>
-            <p
-              style={{
-                margin: "0.25rem 0 0 0",
-                fontSize: "0.875rem",
-                color: darkMode ? "#d1d5db" : "#6b7280",
-              }}
-            >
-              {activeTab === "dashboard"
-                ? "Monitor incoming webhook requests in real-time"
-                : "Send custom HTTP requests to test endpoints"}
-            </p>
-          </div>
-
-          {/* Smaller Dark Mode Toggle */}
-          <Button
-            variant="text"
-            icon={darkMode ? Sun : Moon}
-            onClick={toggleDarkMode}
-            aria-label={
-              darkMode ? "Switch to light mode" : "Switch to dark mode"
-            }
-            size="small"
-            style={{
-              padding: "0.5rem",
-              minWidth: "auto",
-              width: "2.5rem",
-              height: "2.5rem",
-              borderRadius: "6px",
-            }}
-          />
-        </header>
-
-        {/* Content */}
-        <div style={{
+      <main
+        style={{
           flex: 1,
           overflow: "auto",
           backgroundColor: darkMode ? "#111827" : "#f9fafb",
           color: darkMode ? "#f9fafb" : "#111827",
           transition: "all 0.2s ease",
-        }}>
-          {activeTab === "dashboard" ? (
-            <DashboardView
-              loading={loading}
-              error={error}
-              url={url}
-              copied={copied}
-              handleCopy={handleCopy}
-              payloads={payloads}
-              fetchingPayloads={fetchingPayloads}
-              handleExportPDF={handleExportPDF}
-              fetchPayloads={fetchPayloads}
-              getMethodColor={getMethodColor}
-              darkMode={darkMode}
-            />
-          ) : (
-            <ComposerView
-              composerMethod={composerMethod}
-              setComposerMethod={setComposerMethod}
-              composerUrl={composerUrl}
-              setComposerUrl={setComposerUrl}
-              composerPayload={composerPayload}
-              setComposerPayload={setComposerPayload}
-              composerSending={composerSending}
-              handleSendComposerRequest={handleSendComposerRequest}
-              composerResponse={composerResponse}
-              darkMode={darkMode}
-            />
-          )}
-        </div>
+        }}
+      >
+        {activeTab === "dashboard" ? (
+          <DashboardView
+            loading={loading}
+            error={error}
+            url={url}
+            copied={copied}
+            handleCopy={handleCopy}
+            payloads={payloads}
+            fetchingPayloads={fetchingPayloads}
+            handleExportPDF={handleExportPDF}
+            fetchPayloads={fetchPayloads}
+            getMethodColor={getMethodColor}
+            darkMode={darkMode}
+          />
+        ) : (
+          <ComposerView
+            composerMethod={composerMethod}
+            setComposerMethod={setComposerMethod}
+            composerUrl={composerUrl}
+            setComposerUrl={setComposerUrl}
+            composerPayload={composerPayload}
+            setComposerPayload={setComposerPayload}
+            composerSending={composerSending}
+            handleSendComposerRequest={handleSendComposerRequest}
+            composerResponse={composerResponse}
+            darkMode={darkMode}
+          />
+        )}
       </main>
+
+      {/* Footer */}
+      <footer
+        style={{
+          padding: "1rem 2rem",
+          borderTop: `1px solid ${darkMode ? "#374151" : "#e5e7eb"}`,
+          backgroundColor: darkMode ? "#1f2937" : "#ffffff",
+          color: darkMode ? "#9ca3af" : "#6b7280",
+          fontSize: "0.875rem",
+          textAlign: "center",
+        }}
+      >
+        NeetoWebhooks v1.0.0 • Built with ❤️ using NeetoUI
+      </footer>
     </div>
   );
 };
