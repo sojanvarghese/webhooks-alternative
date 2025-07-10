@@ -3,7 +3,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@bigbinary/*": ["node_modules/@bigbinary/*"]
+      "@bigbinary/*": ["../node_modules/@bigbinary/*"]
     },
     "target": "es6",
     "lib": ["dom", "dom.iterable", "es6"],
@@ -22,7 +22,7 @@
   },
   "include": [
     "src/**/*",
-    "node_modules/@bigbinary/**/*"
+    "../node_modules/@bigbinary/**/*"
   ],
   "exclude": [
     "node_modules",
