@@ -15,8 +15,10 @@ export const getApiBaseUrl = () => {
   // In production, check if we're on NeetoDeploy
   const origin = window.location.origin;
   if (origin.includes('neetodeployapp.com')) {
-    // NeetoDeploy: Backend runs on port 3001, frontend on port 3000
-    return `${origin.replace(':3000', '')}:3001`;
+    // NeetoDeploy: Backend runs on port 3001, frontend typically on port 3000 or no port
+    // Remove any existing port and add :3001
+    const baseUrl = origin.replace(/:\d+$/, '');
+    return `${baseUrl}:3001`;
   }
 
   // For other production environments, use the same origin
@@ -38,8 +40,10 @@ export const getWebhookBaseUrl = () => {
   // In production, check if we're on NeetoDeploy
   const origin = window.location.origin;
   if (origin.includes('neetodeployapp.com')) {
-    // NeetoDeploy: Backend runs on port 3001, frontend on port 3000
-    return `${origin.replace(':3000', '')}:3001`;
+    // NeetoDeploy: Backend runs on port 3001, frontend typically on port 3000 or no port
+    // Remove any existing port and add :3001
+    const baseUrl = origin.replace(/:\d+$/, '');
+    return `${baseUrl}:3001`;
   }
 
   // For other production environments, use the same origin
