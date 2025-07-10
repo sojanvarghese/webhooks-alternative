@@ -120,11 +120,23 @@ class EndpointController < ApplicationController
   # This allows the frontend to make requests to external URLs without CORS issues
   def proxy_request
     begin
-      # Get request parameters
-      url = params[:url]
-      method = params[:method] || 'GET'
-      headers = params[:headers] || {}
-      body_data = params[:body]
+      # Parse JSON body directly to avoid Rails parameter parsing conflicts
+      request_body = request.body.read
+      if request_body.present?
+        begin
+          payload_data = JSON.parse(request_body)
+        rescue JSON::ParserError
+          render json: { error: "Invalid JSON in request body" }, status: :bad_request and return
+        end
+      else
+        render json: { error: "Request body is required" }, status: :bad_request and return
+      end
+
+      # Get request parameters from parsed JSON
+      url = payload_data['url']
+      method = payload_data['method'] || 'GET'
+      headers = payload_data['headers'] || {}
+      body_data = payload_data['body']
 
       # Validate required parameters
       if url.blank?
