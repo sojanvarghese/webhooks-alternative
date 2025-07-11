@@ -97,9 +97,7 @@ setTimeout(() => {
     createProxyMiddleware({
       target: `http://localhost:${BACKEND_PORT}`,
       changeOrigin: true,
-      pathRewrite: {
-        "^/api": "", // Remove /api prefix when forwarding to backend
-      },
+      // Remove pathRewrite - Rails backend expects /api prefix
       onError: (err, req, res) => {
         console.error("❌ API proxy error:", err.message);
         res.status(502).json({ error: "Backend API unavailable" });

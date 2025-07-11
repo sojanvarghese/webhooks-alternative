@@ -226,19 +226,29 @@ class EndpointController < ApplicationController
 
       # Make the HTTP request for external URLs
       require 'net/http'
+      require 'net/https'
       require 'json'
 
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = uri.scheme == 'https'
-      http.read_timeout = 30
-      http.open_timeout = 30
+      Rails.logger.info "[PROXY REQUEST] Creating HTTP client for #{uri.scheme}://#{uri.host}:#{uri.port}"
 
-      Rails.logger.info "[PROXY REQUEST] HTTP client configured: ssl=#{http.use_ssl}, timeout=30"
+      # Use Net::HTTP.start for better connection management
+      http_opts = {
+        use_ssl: uri.scheme == 'https',
+        read_timeout: 30,
+        open_timeout: 30
+      }
+
+      if uri.scheme == 'https'
+        http_opts[:verify_mode] = OpenSSL::SSL::VERIFY_PEER
+        Rails.logger.info "[PROXY REQUEST] HTTPS client configured with SSL verification"
+      end
+
+      Rails.logger.info "[PROXY REQUEST] HTTP client configured: ssl=#{http_opts[:use_ssl]}, timeout=30"
 
       # Skip SSL verification for self-requests in production to avoid certificate issues
       if uri.host == current_host
         Rails.logger.info "[PROXY REQUEST] Skipping SSL verification for self-request"
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        http_opts[:verify_mode] = OpenSSL::SSL::VERIFY_NONE
       end
 
       # Create the request
@@ -295,7 +305,11 @@ class EndpointController < ApplicationController
       # Execute the request
       Rails.logger.info "[PROXY REQUEST] Executing HTTP request..."
       start_time = Time.current
-      response = http.request(request)
+
+      response = Net::HTTP.start(uri.host, uri.port, http_opts) do |http|
+        http.request(request)
+      end
+
       end_time = Time.current
 
       Rails.logger.info "[PROXY REQUEST] HTTP request completed: status=#{response.code}, duration=#{(end_time - start_time).round(3)}s"
@@ -325,7 +339,7 @@ class EndpointController < ApplicationController
       Rails.logger.info "[PROXY REQUEST] Returning external request response: success=#{response_data[:success]}, status=#{response_data[:status]}"
       render json: response_data
 
-    rescue Net::TimeoutError => e
+    rescue Net::ReadTimeout, Net::OpenTimeout => e
       Rails.logger.error "[PROXY REQUEST] Request timeout: #{e.message}"
       render json: {
         success: false,
