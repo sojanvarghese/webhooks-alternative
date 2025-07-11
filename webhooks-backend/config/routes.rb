@@ -6,6 +6,9 @@ Rails.application.routes.draw do
   # API info endpoint for backend status
   get "api/info" => "endpoint#api_info", as: :api_info
 
+  # Proxy endpoint for Request Composer (handles outbound HTTP requests)
+  post "api/proxy" => "endpoint#proxy_request", as: :proxy_request
+
   # Webhook endpoints - these use UUID patterns
   post '/:uuid', to: 'endpoint#create_payload'
   get '/:uuid', to: 'endpoint#handle_get_request'

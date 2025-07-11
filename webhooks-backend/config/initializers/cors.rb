@@ -5,10 +5,20 @@
 
 # Read more: https://github.com/cyu/rack-cors
 
-# Allow CORS requests from the React frontend during development
+# Allow CORS requests from the React frontend during development and production
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
+    # Allow development origin
     origins "http://localhost:3000"
+
+    resource "*",
+      headers: :any,
+      methods: [:get, :post, :put, :patch, :delete, :options, :head]
+  end
+
+  # Allow NeetoDeploy production origins
+  allow do
+    origins /https:\/\/.*\.neetodeployapp\.com/
 
     resource "*",
       headers: :any,

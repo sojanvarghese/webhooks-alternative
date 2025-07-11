@@ -4,32 +4,40 @@
 /**
  * Get the backend API base URL based on the current environment
  * In development: uses localhost:3001
- * In production: uses the same domain (proxied through the main server)
+ * In production: uses the same domain but with port 3001 for NeetoDeploy
  */
 export const getApiBaseUrl = () => {
   // Check if we're in development mode
   if (process.env.NODE_ENV === "development") {
+    console.log("[API CONFIG] Development mode detected, using localhost:3001");
     return "http://localhost:3001";
   }
 
-  // In production, use the same origin (requests will be proxied)
-  return window.location.origin;
+  // In production, use the same origin (proxy setup handles backend routing)
+  const baseUrl = window.location.origin;
+  console.log("[API CONFIG] Production mode detected, using:", baseUrl);
+  return baseUrl;
 };
 
 /**
  * Get the webhook endpoint base URL
  * This is where external services should send webhook requests
  * In development: uses localhost:3001
- * In production: uses the same domain as the app
+ * In production: uses the same domain but with port 3001 for NeetoDeploy
  */
 export const getWebhookBaseUrl = () => {
   // Check if we're in development mode
   if (process.env.NODE_ENV === "development") {
+    console.log(
+      "[WEBHOOK CONFIG] Development mode detected, using localhost:3001"
+    );
     return "http://localhost:3001";
   }
 
-  // In production, use the same origin
-  return window.location.origin;
+  // In production, use the same origin (proxy setup handles webhook routing)
+  const baseUrl = window.location.origin;
+  console.log("[WEBHOOK CONFIG] Production mode detected, using:", baseUrl);
+  return baseUrl;
 };
 
 /**
@@ -42,23 +50,24 @@ export const createApiUrl = (endpoint) => {
   // Ensure endpoint starts with /
   const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
 
-  // In development, use direct backend URL
-  if (process.env.NODE_ENV === "development") {
-    return `${baseUrl}${cleanEndpoint}`;
-  }
-
-  // In production, add /api prefix for proxied requests (except for webhook endpoints)
-  // Webhook endpoints (UUID pattern) should go directly to the backend
+  // Check if this is a webhook endpoint (UUID pattern)
   const isWebhookEndpoint =
     /^\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/.test(
       cleanEndpoint
     );
 
+  let finalUrl;
+  // Webhook endpoints go directly to the backend without /api prefix
   if (isWebhookEndpoint) {
-    return `${baseUrl}${cleanEndpoint}`;
+    finalUrl = `${baseUrl}${cleanEndpoint}`;
+    console.log("[API CONFIG] Created webhook endpoint URL:", finalUrl);
+  } else {
+    // All other endpoints (including /proxy) get /api prefix in both development and production
+    finalUrl = `${baseUrl}/api${cleanEndpoint}`;
+    console.log("[API CONFIG] Created API endpoint URL:", finalUrl);
   }
 
-  return `${baseUrl}/api${cleanEndpoint}`;
+  return finalUrl;
 };
 
 /**
@@ -68,7 +77,14 @@ export const createApiUrl = (endpoint) => {
  */
 export const createWebhookUrl = (uuid) => {
   const baseUrl = getWebhookBaseUrl();
-  return `${baseUrl}/${uuid}`;
+  const webhookUrl = `${baseUrl}/${uuid}`;
+  console.log(
+    "[WEBHOOK CONFIG] Created webhook URL:",
+    webhookUrl,
+    "for UUID:",
+    uuid
+  );
+  return webhookUrl;
 };
 
 /**

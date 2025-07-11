@@ -72,24 +72,26 @@ main {
 .app-card {
   background-color: var(--bg-primary);
   border: 1px solid var(--border-primary);
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px 0 rgba(34, 197, 94, 0.04), 0 1.5px 4px 0 rgba(0,0,0,0.04);
+  border-radius: 0.75rem; /* 12px, matches neetoUI's md radius */
+  padding: 2rem 1.5rem;
   color: var(--text-primary);
+  transition: all 0.2s ease;
 }
 
 [data-theme="dark"] .app-card {
-  background-color: #1f2937;
-  border: 1px solid #374151;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-  color: #f9fafb;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-primary);
+  box-shadow: 0 2px 8px 0 rgba(34, 197, 94, 0.10), 0 1.5px 4px 0 rgba(0,0,0,0.10);
+  color: var(--text-primary);
 }
 
 .app-card:hover {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 6px 16px -2px rgba(34, 197, 94, 0.10), 0 2px 8px -2px rgba(0,0,0,0.10);
 }
 
 [data-theme="dark"] .app-card:hover {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 6px 16px -2px rgba(34, 197, 94, 0.18), 0 2px 8px -2px rgba(0,0,0,0.18);
 }
 
 /* Code block styles with proper dark mode */
@@ -162,15 +164,15 @@ main {
 
 /* Force button styles for specific components */
 .landing-cta-button {
-  background-color: #22C55E !important;
-  border-color: #22C55E !important;
+  background-color: #008068 !important;
+  border-color: #008068 !important;
   color: #ffffff !important;
   border: none !important;
 }
 
 .landing-cta-button:hover {
-  background-color: #16A34A !important;
-  border-color: #16A34A !important;
+  background-color: #006653 !important;
+  border-color: #006653 !important;
 }
 
 [data-theme="dark"] .landing-cta-button {
@@ -179,20 +181,20 @@ main {
 }
 
 [data-theme="dark"] .landing-cta-button:hover {
-  background-color: #15803D !important;
-  border-color: #15803D !important;
+  background-color: #006653 !important;
+  border-color: #006653 !important;
 }
 
 .composer-send-button {
-  background-color: #22C55E !important;
-  border-color: #22C55E !important;
+  background-color: #007a64 !important;
+  border-color: #007a64 !important;
   color: #ffffff !important;
   border: none !important;
 }
 
 .composer-send-button:hover {
-  background-color: #16A34A !important;
-  border-color: #16A34A !important;
+  background-color: #006653 !important;
+  border-color: #006653 !important;
 }
 
 [data-theme="dark"] .composer-send-button {
@@ -286,7 +288,194 @@ main {
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
-/* Typography overrides for dark mode */
+/* Landing Page Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Landing page animation classes */
+.landing-header {
+  animation: fadeInDown 0.8s ease-out;
+}
+
+.landing-hero {
+  animation: fadeInUp 1s ease-out 0.2s both;
+}
+
+.landing-hero-title {
+  animation: fadeInUp 1s ease-out 0.4s both;
+}
+
+.landing-hero-subtitle {
+  animation: fadeInUp 1s ease-out 0.6s both;
+}
+
+.landing-cta-button {
+  animation: scaleIn 0.8s ease-out 0.8s both;
+  background-color: #008068 !important;
+  border-color: #008068 !important;
+  color: #ffffff !important;
+  border: none !important;
+  transition: all 0.3s ease;
+}
+
+.landing-cta-button:hover {
+  background-color: #006653 !important;
+  border-color: #006653 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 128, 104, 0.3);
+}
+
+.landing-features {
+  animation: fadeIn 1s ease-out 1s both;
+}
+
+.landing-feature-1 {
+  animation: slideInUp 0.8s ease-out 1.2s both;
+}
+
+.landing-feature-2 {
+  animation: slideInUp 0.8s ease-out 1.4s both;
+}
+
+.landing-feature-3 {
+  animation: slideInUp 0.8s ease-out 1.6s both;
+}
+
+.landing-footer {
+  animation: fadeIn 1s ease-out 1.8s both;
+}
+
+/* Stagger animation for feature cards */
+.feature-card {
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .feature-card:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive animations */
+@media (prefers-reduced-motion: reduce) {
+  .landing-header,
+  .landing-hero,
+  .landing-hero-title,
+  .landing-hero-subtitle,
+  .landing-cta-button,
+  .landing-features,
+  .landing-feature-1,
+  .landing-feature-2,
+  .landing-feature-3,
+  .landing-footer {
+    animation: none;
+  }
+}
+
+.landing-container {
+  animation: fadeIn 0.5s ease-out;
+}
+
+[data-theme="dark"] .landing-container {
+  animation: fadeIn 0.5s ease-out;
+}
+
+[data-theme="dark"] .neeto-ui-input {
+  background-color: #374151 !important;
+  border-color: #4b5563 !important;
+  color: #f9fafb !important;
+}
+
+[data-theme="dark"] .neeto-ui-button--secondary {
+  background-color: #374151 !important;
+  border-color: #4b5563 !important;
+  color: #f9fafb !important;
+}
+
+[data-theme="dark"] .neeto-ui-button--secondary:hover {
+  background-color: #4b5563 !important;
+  border-color: #6b7280 !important;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 [data-theme="dark"] h1,
 [data-theme="dark"] h2,
 [data-theme="dark"] h3,
@@ -302,4 +491,63 @@ main {
 
 [data-theme="dark"] label {
   color: #f9fafb !important;
+}
+
+.curl-example-container:hover .curl-copy-btn-wrapper {
+  opacity: 1 !important;
+}
+
+.curl-copy-btn-wrapper {
+  opacity: 0;
+  transition: opacity 0.2s;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Blurred background for visibility */
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(6px);
+  border-radius: 50%;
+  box-shadow: 0 2px 8px 0 rgba(34,197,94,0.10);
+  padding: 2px;
+}
+
+[data-theme="dark"] .curl-copy-btn-wrapper {
+  background: rgba(31,41,55,0.7);
+}
+
+.curl-example-container:hover .curl-copy-btn-wrapper {
+  opacity: 1 !important;
+}
+
+.curl-copy-btn.copied {
+  background-color: var(--method-get) !important;
+  border-color: var(--method-get) !important;
+  color: #fff !important;
+  animation: popTick 0.3s;
+}
+
+.endpoint-copy-btn.copied {
+  background-color: var(--method-get) !important;
+  border-color: var(--method-get) !important;
+  color: #fff !important;
+  animation: popTick 0.3s;
+}
+
+@keyframes popTick {
+  0% { transform: scale(1); }
+  60% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+
+.curl-examples-scroll {
+  max-height: calc(100vh - 350px);
+  overflow-y: auto;
+  padding-right: 8px;
+  padding-bottom: 24px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-primary) var(--bg-secondary);
 }

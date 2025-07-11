@@ -9,12 +9,15 @@ import "./App.css";
 
 // Helper to generate a UUID (v4)
 function generateUUID() {
-  return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+  console.log("[UUID GENERATOR] Generating new UUID...");
+  const uuid = ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
     (
       c ^
       (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
     ).toString(16)
   );
+  console.log("[UUID GENERATOR] Generated UUID:", uuid);
+  return uuid;
 }
 
 function MainApp({ darkMode, toggleDarkMode }) {
@@ -60,6 +63,13 @@ function MainApp({ darkMode, toggleDarkMode }) {
   const handleSendComposerRequest = async () => {
     if (!composerUrl.trim()) return;
 
+    console.log("[REQUEST COMPOSER] Starting request:", {
+      method: composerMethod,
+      url: composerUrl,
+      payloadLength: composerPayload.length,
+      timestamp: new Date().toISOString(),
+    });
+
     setComposerSending(true);
     setComposerResponse(null);
 
@@ -68,39 +78,97 @@ function MainApp({ darkMode, toggleDarkMode }) {
 
       // Parse JSON payload if it's not a GET request
       if (composerMethod !== "GET" && composerPayload.trim()) {
+        console.log("[REQUEST COMPOSER] Parsing JSON payload...");
         try {
           requestData = JSON.parse(composerPayload);
+          console.log(
+            "[REQUEST COMPOSER] JSON payload parsed successfully:",
+            requestData
+          );
         } catch (parseError) {
+          console.error("[REQUEST COMPOSER] JSON parse error:", parseError);
           throw new Error(`Invalid JSON payload: ${parseError.message}`);
         }
+      } else {
+        console.log(
+          "[REQUEST COMPOSER] Skipping JSON parsing (GET request or empty payload)"
+        );
       }
 
-      const config = {
+      // Use backend proxy to avoid CORS issues
+      const proxyPayload = {
         method: composerMethod,
         url: composerUrl,
         headers: {
           "Content-Type": "application/json",
         },
-        timeout: 30000,
+        body:
+          composerMethod !== "GET" && Object.keys(requestData).length > 0
+            ? requestData
+            : null,
       };
 
-      if (composerMethod !== "GET" && Object.keys(requestData).length > 0) {
-        config.data = requestData;
-      }
-
-      const response = await axios(config);
-
-      setComposerResponse({
-        success: true,
-        status: response.status,
-        statusText: response.statusText,
-        data: response.data,
-        headers: response.headers,
+      console.log("[REQUEST COMPOSER] Sending proxy request:", {
+        proxyUrl: createApiUrl("/proxy"),
+        proxyPayload: proxyPayload,
         timestamp: new Date().toISOString(),
       });
 
-      Toastr.success("Request sent successfully!");
+      // New commit
+      const response = await axios.post(createApiUrl("/proxy"), proxyPayload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        timeout: 30000,
+      });
+
+      console.log("[REQUEST COMPOSER] Proxy response received:", {
+        status: response.status,
+        statusText: response.statusText,
+        data: response.data,
+        timestamp: new Date().toISOString(),
+      });
+
+      // Extract the response data from the proxy response
+      const proxyResponse = response.data;
+
+      setComposerResponse({
+        success: proxyResponse.success,
+        status: proxyResponse.status,
+        statusText: proxyResponse.statusText,
+        data: proxyResponse.data,
+        headers: proxyResponse.headers,
+        timestamp: proxyResponse.timestamp,
+      });
+
+      if (proxyResponse.success) {
+        console.log("[REQUEST COMPOSER] Request succeeded:", {
+          status: proxyResponse.status,
+          timestamp: proxyResponse.timestamp,
+        });
+        Toastr.success("Request sent successfully!");
+      } else {
+        console.warn(
+          "[REQUEST COMPOSER] Request failed (proxy success=false):",
+          {
+            status: proxyResponse.status,
+            error: proxyResponse.error,
+            timestamp: proxyResponse.timestamp,
+          }
+        );
+        Toastr.error(
+          `Request failed: ${proxyResponse.error || "Unknown error"}`
+        );
+      }
     } catch (error) {
+      console.error("[REQUEST COMPOSER] Request error:", {
+        message: error.message,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        timestamp: new Date().toISOString(),
+      });
+
       setComposerResponse({
         success: false,
         status: error.response?.status || null,
@@ -113,6 +181,9 @@ function MainApp({ darkMode, toggleDarkMode }) {
 
       Toastr.error(`Request failed: ${error.message}`);
     } finally {
+      console.log(
+        "[REQUEST COMPOSER] Request completed, resetting loading state"
+      );
       setComposerSending(false);
     }
   };
@@ -151,44 +222,86 @@ Data: ${JSON.stringify(p.data, null, 2)}
   const fetchPayloads = useCallback(async () => {
     if (!uuid) return;
 
+    console.log("[FETCH PAYLOADS] Starting fetch request for UUID:", uuid);
     setFetchingPayloads(true);
     try {
-      const response = await axios.get(
-        createApiUrl(`/${uuid}?fetch_payloads=true`),
-        {
-          headers: {
-            Accept: "application/json",
-            Referer: window.location.origin,
-          },
-        }
-      );
+      const apiUrl = createApiUrl(`/${uuid}?fetch_payloads=true`);
+      console.log("[FETCH PAYLOADS] Making request to:", apiUrl);
+
+      const response = await axios.get(apiUrl, {
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      console.log("[FETCH PAYLOADS] Response received:", {
+        status: response.status,
+        statusText: response.statusText,
+        payloadCount: response.data.payloads?.length || 0,
+        timestamp: new Date().toISOString(),
+      });
+
       setPayloads(response.data.payloads || []);
+
+      // Clear any previous errors on successful fetch
+      if (error) {
+        console.log("[FETCH PAYLOADS] Clearing previous error state");
+        setError(null);
+      }
     } catch (err) {
-      console.error("Error fetching payloads:", err);
+      console.error("[FETCH PAYLOADS] Request failed:", {
+        message: err.message,
+        status: err.response?.status,
+        statusText: err.response?.statusText,
+        data: err.response?.data,
+        timestamp: new Date().toISOString(),
+      });
+
       if (err.response?.status !== 404) {
+        console.error("[FETCH PAYLOADS] Setting error state");
         setError("Failed to fetch requests. Please refresh.");
+      } else {
+        console.log("[FETCH PAYLOADS] 404 response - endpoint not found yet");
       }
     } finally {
+      console.log("[FETCH PAYLOADS] Fetch completed, resetting loading state");
       setFetchingPayloads(false);
     }
   }, [uuid]);
 
   // Initialize UUID and URL on component mount
   useEffect(() => {
+    console.log("[APP INIT] Initializing component...");
     const newUuid = generateUUID();
+    console.log("[APP INIT] Generated UUID:", newUuid);
+
     setUuid(newUuid);
+
     const newUrl = createWebhookUrl(newUuid);
+    console.log("[APP INIT] Generated webhook URL:", newUrl);
+
     setUrl(newUrl);
     setLoading(false);
+
+    console.log("[APP INIT] Component initialization complete");
   }, []);
 
   // Fetch payloads every 3 seconds
   useEffect(() => {
     if (!uuid) return;
 
+    console.log("[PAYLOAD POLLING] Starting payload polling for UUID:", uuid);
+
     fetchPayloads(); // Initial fetch
-    const interval = setInterval(fetchPayloads, 3000);
-    return () => clearInterval(interval);
+    const interval = setInterval(() => {
+      console.log("[PAYLOAD POLLING] Executing scheduled fetch");
+      fetchPayloads();
+    }, 3000);
+
+    return () => {
+      console.log("[PAYLOAD POLLING] Cleaning up payload polling interval");
+      clearInterval(interval);
+    };
   }, [uuid, fetchPayloads]);
 
   return (

@@ -1,7 +1,26 @@
-import React from "react";
-import { Button, Spinner, Input, Tooltip } from "@bigbinary/neetoui";
-import { Copy } from "@bigbinary/neeto-icons";
+import React, { useState } from "react";
+import { Button, Spinner, Input, Tooltip, NoData } from "@bigbinary/neetoui";
+import { Copy, Check } from "@bigbinary/neeto-icons";
 import JsonViewer from "./JsonViewer";
+
+const CURL_EXAMPLES = [
+  {
+    label: "POST with JSON payload:",
+    getCode: (url) => `curl -X POST "${url}" \\\n  -H "Content-Type: application/json" \\\n  -d '{"event": "test", "data": {"key": "value"}}'`,
+  },
+  {
+    label: "GET with query parameters:",
+    getCode: (url) => `curl -X GET "${url}?source=test&action=webhook"`,
+  },
+  {
+    label: "POST with custom headers:",
+    getCode: (url) => `curl -X POST "${url}" \\\n  -H "Authorization: Bearer your-token" \\\n  -H "X-Webhook-Source: your-app" \\\n  -d '{"timestamp": "${new Date().toISOString()}"}'`,
+  },
+  {
+    label: "PUT request:",
+    getCode: (url) => `curl -X PUT "${url}" \\\n  -H "Content-Type: application/json" \\\n  -d '{"updated_at": "${new Date().toISOString()}"}'`,
+  },
+];
 
 const DashboardView = ({
   loading,
@@ -16,12 +35,31 @@ const DashboardView = ({
   getMethodColor,
   darkMode,
 }) => {
+  // Track which example was just copied
+  const [copiedExample, setCopiedExample] = useState(null);
+  // Track endpoint copy animation
+  const [endpointCopied, setEndpointCopied] = useState(false);
+
+  // Copy handler for examples
+  const handleCopyExample = (code, idx) => {
+    navigator.clipboard.writeText(code);
+    setCopiedExample(idx);
+    setTimeout(() => setCopiedExample(null), 1500);
+  };
+
+  // Copy handler for endpoint
+  const handleEndpointCopy = () => {
+    handleCopy();
+    setEndpointCopied(true);
+    setTimeout(() => setEndpointCopied(false), 1500);
+  };
+
   return (
     <section style={{
       maxWidth: 1400,
       margin: "0 auto",
       padding: "2rem 1.5rem",
-      minHeight: "calc(100vh - 140px)", // Ensure proper height calculation
+      minHeight: "calc(100vh - 140px)",
       display: "flex",
       flexDirection: "column"
     }}>
@@ -33,7 +71,7 @@ const DashboardView = ({
           alignItems: "flex-start",
           gap: "2rem",
           flex: 1,
-          overflow: "hidden", // Prevent container overflow
+          overflow: "hidden",
         }}
       >
         {/* Left: Webhook endpoint info */}
@@ -47,7 +85,7 @@ const DashboardView = ({
             display: "flex",
             flexDirection: "column",
             height: "fit-content",
-            maxHeight: "calc(100vh - 200px)", // Prevent excessive height
+            maxHeight: "calc(100vh - 200px)",
             borderRadius: 12,
             padding: "2rem 1.5rem",
             boxShadow: "0 2px 8px rgba(34, 197, 94, 0.04)",
@@ -103,6 +141,7 @@ const DashboardView = ({
                 maxWidth: 500,
                 margin: "0 auto",
                 marginBottom: "2rem",
+                position: "relative"
               }}
             >
               <div style={{ flex: 1 }}>
@@ -124,10 +163,15 @@ const DashboardView = ({
               >
                 <Button
                   variant="secondary"
-                  icon={Copy}
-                  onClick={handleCopy}
+                  icon={endpointCopied ? Check : Copy}
+                  onClick={() => {
+                    handleCopy();
+                    setEndpointCopied(true);
+                    setTimeout(() => setEndpointCopied(false), 1500);
+                  }}
                   aria-label="Copy webhook endpoint"
                   size="large"
+                  className={endpointCopied ? "endpoint-copy-btn copied" : "endpoint-copy-btn"}
                 />
               </Tooltip>
             </div>
@@ -149,115 +193,71 @@ const DashboardView = ({
               <div
                 className="curl-examples-scroll"
                 style={{
-                  maxHeight: "300px", // Reduced height to prevent overflow
+                  maxHeight: "300px",
                   overflowY: "auto",
                   paddingRight: "8px",
                   scrollbarWidth: "thin",
                   scrollbarColor: "#D1D5DB #F9FAFB"
                 }}
               >
-                <div style={{ marginBottom: 20 }}>
-                  <p style={{
-                    fontSize: "0.875rem",
-                    fontWeight: 500,
-                    margin: "0 0 0.5rem 0",
-                    color: "#374151"
-                  }}>
-                    POST with JSON payload:
-                  </p>
-                  <pre
-                    className="code-block"
-                    style={{
-                      margin: 0,
-                      padding: 16,
-                      borderRadius: 8,
-                      fontSize: 12,
-                      lineHeight: 1.5,
-                      overflow: "auto",
-                    }}
-                  >
-                    {`curl -X POST "${url}" \\
-  -H "Content-Type: application/json" \\
-  -d '{"event": "test", "data": {"key": "value"}}'`}
-                  </pre>
-                </div>
-
-                <div style={{ marginBottom: 20 }}>
-                  <p style={{
-                    fontSize: "0.875rem",
-                    fontWeight: 500,
-                    margin: "0 0 0.5rem 0",
-                    color: "#374151"
-                  }}>
-                    GET with query parameters:
-                  </p>
-                  <pre
-                    className="code-block"
-                    style={{
-                      margin: 0,
-                      padding: 16,
-                      borderRadius: 8,
-                      fontSize: 12,
-                      lineHeight: 1.5,
-                      overflow: "auto",
-                    }}
-                  >
-                    {`curl -X GET "${url}?source=test&action=webhook"`}
-                  </pre>
-                </div>
-
-                <div style={{ marginBottom: 20 }}>
-                  <p style={{
-                    fontSize: "0.875rem",
-                    fontWeight: 500,
-                    margin: "0 0 0.5rem 0",
-                    color: "#374151"
-                  }}>
-                    POST with custom headers:
-                  </p>
-                  <pre
-                    className="code-block"
-                    style={{
-                      margin: 0,
-                      padding: 16,
-                      borderRadius: 8,
-                      fontSize: 12,
-                      lineHeight: 1.5,
-                      overflow: "auto",
-                    }}
-                  >
-                    {`curl -X POST "${url}" \\
-  -H "Authorization: Bearer your-token" \\
-  -H "X-Webhook-Source: your-app" \\
-  -d '{"timestamp": "${new Date().toISOString()}"}'`}
-                  </pre>
-                </div>
-
-                <div>
-                  <p style={{
-                    fontSize: "0.875rem",
-                    fontWeight: 500,
-                    margin: "0 0 0.5rem 0",
-                    color: "#374151"
-                  }}>
-                    PUT request:
-                  </p>
-                  <pre
-                    className="code-block"
-                    style={{
-                      margin: 0,
-                      padding: 16,
-                      borderRadius: 8,
-                      fontSize: 12,
-                      lineHeight: 1.5,
-                      overflow: "auto",
-                    }}
-                  >
-                    {`curl -X PUT "${url}" \\
-  -H "Content-Type: application/json" \\
-  -d '{"updated_at": "${new Date().toISOString()}"}'`}
-                  </pre>
-                </div>
+                {CURL_EXAMPLES.map((ex, idx) => {
+                  const code = ex.getCode(url);
+                  return (
+                    <div
+                      key={idx}
+                      className="curl-example-container"
+                      style={{
+                        position: "relative",
+                        marginBottom: 20,
+                        borderRadius: 8,
+                        transition: "box-shadow 0.2s",
+                        background: "none"
+                      }}
+                    >
+                      <p style={{
+                        fontSize: "0.875rem",
+                        fontWeight: 500,
+                        margin: "0 0 0.5rem 0",
+                        color: "#374151"
+                      }}>
+                        {ex.label}
+                      </p>
+                      <div style={{ position: "relative" }}>
+                        <pre
+                          className="code-block"
+                          style={{
+                            margin: 0,
+                            padding: 16,
+                            borderRadius: 8,
+                            fontSize: 12,
+                            lineHeight: 1.5,
+                            overflow: "auto",
+                            position: "relative"
+                          }}
+                        >
+                          {code}
+                        </pre>
+                        <span
+                          className={
+                            copiedExample === idx
+                              ? "curl-copy-btn-wrapper curl-copy-btn copied"
+                              : "curl-copy-btn-wrapper curl-copy-btn"
+                          }
+                        >
+                          <Tooltip content={copiedExample === idx ? "Copied!" : "Copy example"} position="left">
+                            <Button
+                              style="icon"
+                              size="small"
+                              icon={copiedExample === idx ? Check : Copy}
+                              aria-label="Copy cURL example"
+                              onClick={() => handleCopyExample(code, idx)}
+                            />
+                          </Tooltip>
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -322,45 +322,15 @@ const DashboardView = ({
             flexDirection: "column"
           }}>
             {fetchingPayloads && payloads.length === 0 ? (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  height: "100%",
-                }}
-              >
-                <Spinner />
+              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: 200 }}>
+                <Spinner size="large" color={darkMode ? "white" : "primary"} />
               </div>
             ) : payloads.length === 0 ? (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  height: "100%",
-                  textAlign: "center",
-                  padding: "3rem",
-                }}
-              >
-                <h4 style={{
-                  margin: "0 0 1rem 0",
-                  fontSize: "1.125rem",
-                  fontWeight: 600,
-                  color: "#111827"
-                }}>
-                  No requests yet
-                </h4>
-                <p style={{
-                  margin: 0,
-                  fontSize: "1rem",
-                  lineHeight: 1.6,
-                  color: "#6b7280"
-                }}>
-                  Send a request to your endpoint to see it appear here
-                </p>
-              </div>
+              <NoData
+                title="No requests yet"
+                description="Send a request to your endpoint to see it appear here."
+                style={{ margin: "2rem 0" }}
+              />
             ) : (
               <div
                 className="request-history-scroll"
