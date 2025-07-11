@@ -162,6 +162,13 @@ class EndpointController < ApplicationController
         # Extract UUID from the path
         webhook_uuid = uri.path.sub('/', '')
 
+        # Parse query parameters properly
+        query_params = if uri.query.present?
+          CGI.parse(uri.query).transform_values(&:first)
+        else
+          {}
+        end
+
         # Create payload directly instead of making HTTP request
         payload = Payload.create(
           uuid: webhook_uuid,
@@ -170,7 +177,7 @@ class EndpointController < ApplicationController
           headers: { 'Content-Type' => 'application/json', 'User-Agent' => 'Ruby' },
           ip_address: request.remote_ip,
           user_agent: 'Ruby',
-          query_params: uri.query || '',
+          query_params: query_params.to_json,
           content_type: 'application/json'
         )
 

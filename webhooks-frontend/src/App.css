@@ -162,15 +162,15 @@ main {
 
 /* Force button styles for specific components */
 .landing-cta-button {
-  background-color: #22C55E !important;
-  border-color: #22C55E !important;
+  background-color: #008068 !important;
+  border-color: #008068 !important;
   color: #ffffff !important;
   border: none !important;
 }
 
 .landing-cta-button:hover {
-  background-color: #16A34A !important;
-  border-color: #16A34A !important;
+  background-color: #006653 !important;
+  border-color: #006653 !important;
 }
 
 [data-theme="dark"] .landing-cta-button {
@@ -179,8 +179,8 @@ main {
 }
 
 [data-theme="dark"] .landing-cta-button:hover {
-  background-color: #15803D !important;
-  border-color: #15803D !important;
+  background-color: #006653 !important;
+  border-color: #006653 !important;
 }
 
 .composer-send-button {
