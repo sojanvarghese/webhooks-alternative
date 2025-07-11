@@ -163,7 +163,7 @@ const MainLayout = ({
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            padding: "1rem 2rem",
+            padding: "1rem 1.5rem", // Reduced padding from 1rem 2rem
             borderBottom: `1px solid ${darkMode ? "#374151" : "#e5e7eb"}`,
             backgroundColor: darkMode ? "#1f2937" : "#ffffff",
             color: darkMode ? "#f9fafb" : "#111827",

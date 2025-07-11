@@ -23,11 +23,13 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
     >
       {/* Header */}
       <header
+        className="landing-header"
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          padding: "1.5rem 2rem",
+          padding: "1rem 1.5rem", // Reduced padding from 1.5rem 2rem
+          margin: "0 auto", // Center the header
           position: "sticky",
           top: 0,
           backgroundColor: darkMode
@@ -39,7 +41,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-          <NeetoWebhooksLogo size={36} showText={true} />
+          <NeetoWebhooksLogo size={33} showText={true} />
         </div>
         <Button
           style="text"
@@ -53,6 +55,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
 
       {/* Hero Section */}
       <main
+        className="landing-hero"
         style={{
           display: "flex",
           flexDirection: "column",
@@ -66,6 +69,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
         <div style={{ maxWidth: "800px", margin: "0 auto" }}>
           {/* Enhanced Hero Typography */}
           <h1
+            className="landing-hero-title"
             style={{
               fontSize: "3.5rem",
               fontWeight: 800,
@@ -91,6 +95,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
 
           {/* Enhanced Hero Description */}
           <p
+            className="landing-hero-subtitle"
             style={{
               fontSize: "1.25rem",
               lineHeight: 1.6,
@@ -129,6 +134,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
 
           {/* Enhanced Features Grid with NeetoUI icons */}
           <div
+            className="landing-features"
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(3, 1fr)",
@@ -142,6 +148,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
           >
             {/* Feature 1 - Enhanced with NeetoUI icon */}
             <div
+              className="landing-feature-1 feature-card"
               style={{
                 padding: "1.5rem 1rem",
                 borderRadius: "12px",
@@ -204,6 +211,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
 
             {/* Feature 2 - Enhanced with NeetoUI icon */}
             <div
+              className="landing-feature-2 feature-card"
               style={{
                 padding: "1.5rem 1rem",
                 borderRadius: "12px",
@@ -266,6 +274,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
 
             {/* Feature 3 - Enhanced with NeetoUI icon */}
             <div
+              className="landing-feature-3 feature-card"
               style={{
                 padding: "1.5rem 1rem",
                 borderRadius: "12px",
@@ -330,6 +339,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
 
       {/* Enhanced Footer */}
       <footer
+        className="landing-footer"
         style={{
           padding: "2rem",
           textAlign: "center",
@@ -338,6 +348,8 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
             ? "rgba(17, 24, 39, 0.8)"
             : "rgba(255, 255, 255, 0.8)",
           backdropFilter: "blur(10px)",
+          padding: "1rem 1.5rem", // Reduced padding from 1.5rem 2rem
+          margin: "0 auto", // Center the header
         }}
       >
         <p
