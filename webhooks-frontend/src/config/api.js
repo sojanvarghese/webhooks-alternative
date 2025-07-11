@@ -9,11 +9,14 @@
 export const getApiBaseUrl = () => {
   // Check if we're in development mode
   if (process.env.NODE_ENV === "development") {
+    console.log("[API CONFIG] Development mode detected, using localhost:3001");
     return "http://localhost:3001";
   }
 
   // In production, use the same origin (proxy setup handles backend routing)
-  return window.location.origin;
+  const baseUrl = window.location.origin;
+  console.log("[API CONFIG] Production mode detected, using:", baseUrl);
+  return baseUrl;
 };
 
 /**
@@ -25,11 +28,16 @@ export const getApiBaseUrl = () => {
 export const getWebhookBaseUrl = () => {
   // Check if we're in development mode
   if (process.env.NODE_ENV === "development") {
+    console.log(
+      "[WEBHOOK CONFIG] Development mode detected, using localhost:3001"
+    );
     return "http://localhost:3001";
   }
 
   // In production, use the same origin (proxy setup handles webhook routing)
-  return window.location.origin;
+  const baseUrl = window.location.origin;
+  console.log("[WEBHOOK CONFIG] Production mode detected, using:", baseUrl);
+  return baseUrl;
 };
 
 /**
@@ -48,13 +56,18 @@ export const createApiUrl = (endpoint) => {
       cleanEndpoint
     );
 
+  let finalUrl;
   // Webhook endpoints go directly to the backend without /api prefix
   if (isWebhookEndpoint) {
-    return `${baseUrl}${cleanEndpoint}`;
+    finalUrl = `${baseUrl}${cleanEndpoint}`;
+    console.log("[API CONFIG] Created webhook endpoint URL:", finalUrl);
+  } else {
+    // All other endpoints (including /proxy) get /api prefix in both development and production
+    finalUrl = `${baseUrl}/api${cleanEndpoint}`;
+    console.log("[API CONFIG] Created API endpoint URL:", finalUrl);
   }
 
-  // All other endpoints (including /proxy) get /api prefix in both development and production
-  return `${baseUrl}/api${cleanEndpoint}`;
+  return finalUrl;
 };
 
 /**
@@ -64,7 +77,14 @@ export const createApiUrl = (endpoint) => {
  */
 export const createWebhookUrl = (uuid) => {
   const baseUrl = getWebhookBaseUrl();
-  return `${baseUrl}/${uuid}`;
+  const webhookUrl = `${baseUrl}/${uuid}`;
+  console.log(
+    "[WEBHOOK CONFIG] Created webhook URL:",
+    webhookUrl,
+    "for UUID:",
+    uuid
+  );
+  return webhookUrl;
 };
 
 /**

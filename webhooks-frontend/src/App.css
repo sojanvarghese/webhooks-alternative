@@ -184,15 +184,15 @@ main {
 }
 
 .composer-send-button {
-  background-color: #22C55E !important;
-  border-color: #22C55E !important;
+  background-color: #007a64 !important;
+  border-color: #007a64 !important;
   color: #ffffff !important;
   border: none !important;
 }
 
 .composer-send-button:hover {
-  background-color: #16A34A !important;
-  border-color: #16A34A !important;
+  background-color: #006653 !important;
+  border-color: #006653 !important;
 }
 
 [data-theme="dark"] .composer-send-button {
