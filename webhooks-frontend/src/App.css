@@ -1,112 +1,77 @@
-/* NeetoUI Integration with proper dark mode support */
+/* NeetoUI Integration with design token usage */
 
-/* Base application styles using NeetoUI variables */
+/* Base application styles using NeetoUI design tokens */
 .App {
   min-height: 100vh;
-  background-color: #ffffff;
-  color: #111827;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  background-color: rgb(var(--neeto-ui-white));
+  color: rgb(var(--neeto-ui-gray-800));
+  transition: all 0.2s ease;
 }
 
 [data-theme="dark"] .App {
-  background-color: #111827;
-  color: #f9fafb;
+  background-color: rgb(var(--neeto-ui-gray-900));
+  color: rgb(var(--neeto-ui-white));
 }
 
-/* CSS Variables for method colors used in gradients */
+/* HTTP Method colors using NeetoUI semantic colors */
 :root {
-  --method-get: #059669; /* emerald-600 */
-  --method-post: #2563eb; /* blue-600 */
-  --method-put: #d97706; /* amber-600 */
-  --method-delete: #dc2626; /* red-600 */
-  --method-patch: #7c3aed; /* violet-600 */
-  --method-default: #6b7280; /* gray-500 */
-  --bg-tertiary: #f3f4f6;
-  --border-primary: #e5e7eb;
-  --text-primary: #111827;
-  --text-secondary: #6b7280;
-  --bg-primary: #ffffff;
-  --bg-secondary: #f9fafb;
+  --method-get: rgb(var(--neeto-ui-success-600));
+  --method-post: rgb(var(--neeto-ui-primary-600));
+  --method-put: rgb(var(--neeto-ui-warning-600));
+  --method-delete: rgb(var(--neeto-ui-error-600));
+  --method-patch: rgb(var(--neeto-ui-info-600));
+  --method-default: rgb(var(--neeto-ui-gray-500));
 }
 
 [data-theme="dark"] {
-  --method-get: #10b981; /* emerald-500 */
-  --method-post: #3b82f6; /* blue-500 */
-  --method-put: #f59e0b; /* amber-500 */
-  --method-delete: #ef4444; /* red-500 */
-  --method-patch: #8b5cf6; /* violet-500 */
-  --method-default: #9ca3af; /* gray-400 */
-  --bg-tertiary: #374151;
-  --border-primary: #4b5563;
-  --text-primary: #f9fafb;
-  --text-secondary: #d1d5db;
-  --bg-primary: #111827;
-  --bg-secondary: #1f2937;
+  --method-get: rgb(var(--neeto-ui-success-500));
+  --method-post: rgb(var(--neeto-ui-primary-500));
+  --method-put: rgb(var(--neeto-ui-warning-500));
+  --method-delete: rgb(var(--neeto-ui-error-500));
+  --method-patch: rgb(var(--neeto-ui-info-500));
+  --method-default: rgb(var(--neeto-ui-gray-400));
 }
 
-/* Fix header dark mode */
+/* Header and layout using NeetoUI tokens */
 header {
-  background-color: var(--bg-primary) !important;
-  color: var(--text-primary) !important;
-  border-bottom: 1px solid var(--border-primary) !important;
+  background-color: rgb(var(--neeto-ui-white)) !important;
+  color: rgb(var(--neeto-ui-gray-800)) !important;
+  border-bottom: 1px solid rgb(var(--neeto-ui-gray-300)) !important;
 }
 
 [data-theme="dark"] header {
-  background-color: #1f2937 !important;
-  color: #f9fafb !important;
-  border-bottom: 1px solid #374151 !important;
+  background-color: rgb(var(--neeto-ui-gray-800)) !important;
+  color: rgb(var(--neeto-ui-white)) !important;
+  border-bottom: 1px solid rgb(var(--neeto-ui-gray-600)) !important;
 }
 
-/* Main content area theming */
 main {
-  background-color: var(--bg-secondary);
-  color: var(--text-primary);
+  background-color: rgb(var(--neeto-ui-gray-50));
+  color: rgb(var(--neeto-ui-gray-800));
 }
 
 [data-theme="dark"] main {
-  background-color: #111827;
-  color: #f9fafb;
+  background-color: rgb(var(--neeto-ui-gray-900));
+  color: rgb(var(--neeto-ui-white));
 }
 
-/* Card component styles */
-.app-card {
-  background-color: var(--bg-primary);
-  border: 1px solid var(--border-primary);
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  transition: all 0.2s ease;
-  color: var(--text-primary);
-}
-
-[data-theme="dark"] .app-card {
-  background-color: #1f2937;
-  border: 1px solid #374151;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-  color: #f9fafb;
-}
-
-.app-card:hover {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-[data-theme="dark"] .app-card:hover {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
-}
-
-/* Code block styles with proper dark mode */
+/* Code blocks using NeetoUI tokens */
 .code-block {
-  background-color: #f8fafc;
-  border: 1px solid #e2e8f0;
-  color: #334155;
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  background-color: rgb(var(--neeto-ui-gray-100));
+  border: 1px solid rgb(var(--neeto-ui-gray-300));
+  border-radius: var(--neeto-ui-rounded);
+  color: rgb(var(--neeto-ui-gray-800));
+  font-family: var(--neeto-ui-font-mono);
+  font-size: var(--neeto-ui-text-sm);
 }
 
 [data-theme="dark"] .code-block {
-  background-color: #0f172a;
-  border: 1px solid #334155;
-  color: #e2e8f0;
+  background-color: rgb(var(--neeto-ui-gray-900));
+  border: 1px solid rgb(var(--neeto-ui-gray-600));
+  color: rgb(var(--neeto-ui-gray-200));
 }
 
-/* Landing page gradient text fix */
+/* Landing page gradient text using NeetoUI colors */
 .gradient-text {
   background: linear-gradient(
     135deg,
@@ -116,96 +81,60 @@ main {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-weight: 700;
+  font-weight: var(--neeto-ui-font-bold);
 }
 
-/* Button styling improvements */
-.gradient-primary-button {
-  background: linear-gradient(135deg, var(--method-get) 0%, var(--method-post) 100%);
-  border: none;
-  color: white;
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
-
-.gradient-primary-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
-}
-
-[data-theme="dark"] .gradient-primary-button:hover {
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-}
-
-/* Ensure button colors are applied properly */
+/* NeetoUI Button customizations with proper branding colors */
 .neeto-ui-button--primary {
-  background-color: #22C55E !important;
-  border-color: #22C55E !important;
-  color: #ffffff !important;
+  background-color: rgb(var(--neeto-ui-success-500)) !important;
+  border-color: rgb(var(--neeto-ui-success-500)) !important;
+  color: rgb(var(--neeto-ui-white)) !important;
 }
 
 .neeto-ui-button--primary:hover {
-  background-color: #16A34A !important;
-  border-color: #16A34A !important;
+  background-color: rgb(var(--neeto-ui-success-600)) !important;
+  border-color: rgb(var(--neeto-ui-success-600)) !important;
 }
 
 [data-theme="dark"] .neeto-ui-button--primary {
-  background-color: #16A34A !important;
-  border-color: #16A34A !important;
-  color: #ffffff !important;
+  background-color: rgb(var(--neeto-ui-success-600)) !important;
+  border-color: rgb(var(--neeto-ui-success-600)) !important;
 }
 
 [data-theme="dark"] .neeto-ui-button--primary:hover {
-  background-color: #15803D !important;
-  border-color: #15803D !important;
+  background-color: rgb(var(--neeto-ui-success-700)) !important;
+  border-color: rgb(var(--neeto-ui-success-700)) !important;
 }
 
-/* Force button styles for specific components */
-.landing-cta-button {
-  background-color: #22C55E !important;
-  border-color: #22C55E !important;
-  color: #ffffff !important;
-  border: none !important;
-}
-
-.landing-cta-button:hover {
-  background-color: #16A34A !important;
-  border-color: #16A34A !important;
-}
-
-[data-theme="dark"] .landing-cta-button {
-  background-color: #16A34A !important;
-  border-color: #16A34A !important;
-}
-
-[data-theme="dark"] .landing-cta-button:hover {
-  background-color: #15803D !important;
-  border-color: #15803D !important;
-}
-
+/* Specific button styling for consistency */
+.landing-cta-button,
 .composer-send-button {
-  background-color: #22C55E !important;
-  border-color: #22C55E !important;
-  color: #ffffff !important;
-  border: none !important;
+  background-color: rgb(var(--neeto-ui-success-500)) !important;
+  border-color: rgb(var(--neeto-ui-success-500)) !important;
+  color: rgb(var(--neeto-ui-white)) !important;
+  box-shadow: var(--neeto-ui-shadow-md);
 }
 
+.landing-cta-button:hover,
 .composer-send-button:hover {
-  background-color: #16A34A !important;
-  border-color: #16A34A !important;
+  background-color: rgb(var(--neeto-ui-success-600)) !important;
+  border-color: rgb(var(--neeto-ui-success-600)) !important;
+  box-shadow: var(--neeto-ui-shadow-lg);
 }
 
+[data-theme="dark"] .landing-cta-button,
 [data-theme="dark"] .composer-send-button {
-  background-color: #16A34A !important;
-  border-color: #16A34A !important;
+  background-color: rgb(var(--neeto-ui-success-600)) !important;
+  border-color: rgb(var(--neeto-ui-success-600)) !important;
 }
 
+[data-theme="dark"] .landing-cta-button:hover,
 [data-theme="dark"] .composer-send-button:hover {
-  background-color: #15803D !important;
-  border-color: #15803D !important;
+  background-color: rgb(var(--neeto-ui-success-700)) !important;
+  border-color: rgb(var(--neeto-ui-success-700)) !important;
 }
 
-/* Scrollbar styling */
+/* Scrollbar styling using NeetoUI colors */
 .curl-examples-scroll::-webkit-scrollbar,
 .request-history-scroll::-webkit-scrollbar {
   width: 8px;
@@ -213,93 +142,169 @@ main {
 
 .curl-examples-scroll::-webkit-scrollbar-track,
 .request-history-scroll::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
-  border-radius: 4px;
+  background: rgb(var(--neeto-ui-gray-100));
+  border-radius: var(--neeto-ui-rounded);
 }
 
 .curl-examples-scroll::-webkit-scrollbar-thumb,
 .request-history-scroll::-webkit-scrollbar-thumb {
-  background: var(--border-primary);
-  border-radius: 4px;
+  background: rgb(var(--neeto-ui-gray-400));
+  border-radius: var(--neeto-ui-rounded);
 }
 
 .curl-examples-scroll::-webkit-scrollbar-thumb:hover,
 .request-history-scroll::-webkit-scrollbar-thumb:hover {
-  background: var(--text-secondary);
+  background: rgb(var(--neeto-ui-gray-500));
 }
 
 [data-theme="dark"] .curl-examples-scroll::-webkit-scrollbar-track,
 [data-theme="dark"] .request-history-scroll::-webkit-scrollbar-track {
-  background: #374151;
+  background: rgb(var(--neeto-ui-gray-700));
 }
 
 [data-theme="dark"] .curl-examples-scroll::-webkit-scrollbar-thumb,
 [data-theme="dark"] .request-history-scroll::-webkit-scrollbar-thumb {
-  background: #4b5563;
+  background: rgb(var(--neeto-ui-gray-500));
 }
 
 [data-theme="dark"] .curl-examples-scroll::-webkit-scrollbar-thumb:hover,
 [data-theme="dark"] .request-history-scroll::-webkit-scrollbar-thumb:hover {
-  background: #6b7280;
+  background: rgb(var(--neeto-ui-gray-400));
 }
 
-/* Text color utilities */
-.text-primary {
-  color: var(--text-primary);
-}
-
-.text-secondary {
-  color: var(--text-secondary);
-}
-
-/* Landing page specific fixes */
-.landing-container {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  transition: all 0.2s ease;
-}
-
-[data-theme="dark"] .landing-container {
-  background-color: #111827;
-  color: #f9fafb;
-}
-
-/* Fix any NeetoUI component overrides in dark mode */
+/* NeetoUI component dark mode fixes */
 [data-theme="dark"] .neeto-ui-input {
-  background-color: #374151 !important;
-  border-color: #4b5563 !important;
-  color: #f9fafb !important;
+  background-color: rgb(var(--neeto-ui-gray-700)) !important;
+  border-color: rgb(var(--neeto-ui-gray-600)) !important;
+  color: rgb(var(--neeto-ui-white)) !important;
+}
+
+[data-theme="dark"] .neeto-ui-input::placeholder {
+  color: rgb(var(--neeto-ui-gray-400)) !important;
+}
+
+[data-theme="dark"] .neeto-ui-textarea {
+  background-color: rgb(var(--neeto-ui-gray-700)) !important;
+  border-color: rgb(var(--neeto-ui-gray-600)) !important;
+  color: rgb(var(--neeto-ui-white)) !important;
+}
+
+[data-theme="dark"] .neeto-ui-select {
+  background-color: rgb(var(--neeto-ui-gray-700)) !important;
+  border-color: rgb(var(--neeto-ui-gray-600)) !important;
+  color: rgb(var(--neeto-ui-white)) !important;
 }
 
 [data-theme="dark"] .neeto-ui-button--secondary {
-  background-color: #374151 !important;
-  border-color: #4b5563 !important;
-  color: #f9fafb !important;
+  background-color: rgb(var(--neeto-ui-gray-700)) !important;
+  border-color: rgb(var(--neeto-ui-gray-600)) !important;
+  color: rgb(var(--neeto-ui-white)) !important;
 }
 
 [data-theme="dark"] .neeto-ui-button--secondary:hover {
-  background-color: #4b5563 !important;
+  background-color: rgb(var(--neeto-ui-gray-600)) !important;
 }
 
-/* Ensure all content respects dark mode */
-* {
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+[data-theme="dark"] .neeto-ui-button--text {
+  color: rgb(var(--neeto-ui-white)) !important;
 }
 
-/* Typography overrides for dark mode */
+[data-theme="dark"] .neeto-ui-button--text:hover {
+  background-color: rgb(var(--neeto-ui-gray-700)) !important;
+}
+
+/* Typography using NeetoUI design tokens */
+h1, h2, h3, h4, h5, h6 {
+  color: rgb(var(--neeto-ui-gray-900));
+  font-weight: var(--neeto-ui-font-semibold);
+}
+
 [data-theme="dark"] h1,
 [data-theme="dark"] h2,
 [data-theme="dark"] h3,
 [data-theme="dark"] h4,
 [data-theme="dark"] h5,
 [data-theme="dark"] h6 {
-  color: #f9fafb !important;
+  color: rgb(var(--neeto-ui-white)) !important;
+}
+
+p {
+  color: rgb(var(--neeto-ui-gray-700));
+  line-height: var(--neeto-ui-line-height-relaxed);
 }
 
 [data-theme="dark"] p {
-  color: #d1d5db !important;
+  color: rgb(var(--neeto-ui-gray-300)) !important;
+}
+
+label {
+  color: rgb(var(--neeto-ui-gray-700));
+  font-weight: var(--neeto-ui-font-medium);
 }
 
 [data-theme="dark"] label {
-  color: #f9fafb !important;
+  color: rgb(var(--neeto-ui-gray-300)) !important;
+}
+
+/* Utility classes using NeetoUI tokens */
+.text-primary {
+  color: rgb(var(--neeto-ui-gray-900));
+}
+
+[data-theme="dark"] .text-primary {
+  color: rgb(var(--neeto-ui-white));
+}
+
+.text-secondary {
+  color: rgb(var(--neeto-ui-gray-600));
+}
+
+[data-theme="dark"] .text-secondary {
+  color: rgb(var(--neeto-ui-gray-400));
+}
+
+.bg-primary {
+  background-color: rgb(var(--neeto-ui-white));
+}
+
+[data-theme="dark"] .bg-primary {
+  background-color: rgb(var(--neeto-ui-gray-800));
+}
+
+.bg-secondary {
+  background-color: rgb(var(--neeto-ui-gray-50));
+}
+
+[data-theme="dark"] .bg-secondary {
+  background-color: rgb(var(--neeto-ui-gray-900));
+}
+
+/* Landing page specific styling with NeetoUI tokens */
+.landing-container {
+  background-color: rgb(var(--neeto-ui-white));
+  color: rgb(var(--neeto-ui-gray-800));
+  transition: all 0.2s ease;
+}
+
+[data-theme="dark"] .landing-container {
+  background-color: rgb(var(--neeto-ui-gray-900));
+  color: rgb(var(--neeto-ui-white));
+}
+
+/* Ensure smooth transitions for all elements */
+* {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Tab styling overrides for proper branding */
+.neeto-ui-tab {
+  --neeto-ui-tab-active-color: rgb(var(--neeto-ui-success-600));
+  --neeto-ui-tab-active-border-color: rgb(var(--neeto-ui-success-600));
+}
+
+[data-theme="dark"] .neeto-ui-tab {
+  --neeto-ui-tab-color: rgb(var(--neeto-ui-gray-300));
+  --neeto-ui-tab-hover-color: rgb(var(--neeto-ui-white));
+  --neeto-ui-tab-active-color: rgb(var(--neeto-ui-success-500));
+  --neeto-ui-tab-active-border-color: rgb(var(--neeto-ui-success-500));
 }

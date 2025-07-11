@@ -2,10 +2,11 @@
   "mcpServers": {
     "playwright": {
       "command": "npx",
-      "args": [
-        "@playwright/mcp@latest",
-        "--vision"
-      ]
+      "args": ["@playwright/mcp@latest", "--vision"]
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
     }
   }
 }

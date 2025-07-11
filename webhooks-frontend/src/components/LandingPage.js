@@ -1,6 +1,12 @@
 import React from "react";
 import { Button } from "@bigbinary/neetoui";
-import { Sun, Moon } from "@bigbinary/neeto-icons";
+import {
+  Sun,
+  Moon,
+  Flash,
+  ActivityLog,
+  Settings,
+} from "@bigbinary/neeto-icons";
 import NeetoWebhooksLogo from "./NeetoWebhooksLogo";
 
 const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
@@ -33,25 +39,15 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-          {/* Logo with text for branding */}
           <NeetoWebhooksLogo size={36} showText={true} />
         </div>
-        {/* Dark Mode Toggle only */}
         <Button
-          variant="text"
+          style="text"
           icon={darkMode ? Sun : Moon}
           onClick={toggleDarkMode}
           aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
           size="small"
-          style={{
-            padding: "0.5rem",
-            minWidth: "auto",
-            width: "2.75rem",
-            height: "2.75rem",
-            borderRadius: "6px",
-            color: "#111827",
-            border: `1px solid ${darkMode ? "#4b5563" : "#d1d5db"}`,
-          }}
+          className="dark-mode-toggle"
         />
       </header>
 
@@ -68,29 +64,40 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
         }}
       >
         <div style={{ maxWidth: "800px", margin: "0 auto" }}>
-          {/* Hero Heading */}
+          {/* Enhanced Hero Typography */}
           <h1
             style={{
               fontSize: "3.5rem",
               fontWeight: 800,
-              marginBottom: "1.5rem",
               lineHeight: 1.1,
               color: darkMode ? "#f9fafb" : "#111827",
+              textAlign: "center",
+              marginBottom: "1.5rem",
             }}
           >
-            Test webhooks <span className="gradient-text">instantly</span> with
-            real-time monitoring
+            Test webhooks{" "}
+            <span
+              style={{
+                background: "linear-gradient(135deg, #22C55E 0%, #16A34A 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              instantly
+            </span>{" "}
+            with real-time monitoring
           </h1>
 
-          {/* Hero Description */}
+          {/* Enhanced Hero Description */}
           <p
             style={{
               fontSize: "1.25rem",
               lineHeight: 1.6,
-              marginBottom: "3rem",
               color: darkMode ? "#d1d5db" : "#6b7280",
               maxWidth: "600px",
               margin: "0 auto 3rem auto",
+              textAlign: "center",
             }}
           >
             Get a unique webhook URL in seconds. Send requests, monitor
@@ -98,11 +105,9 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
             interface.
           </p>
 
-          {/* CTA Button with improved Neeto styling */}
+          {/* Enhanced CTA Button */}
           <Button
             label="Start Testing Now"
-            variant="primary"
-            size="large"
             onClick={onStartTesting}
             className="landing-cta-button"
             style={{
@@ -115,10 +120,14 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
               letterSpacing: "-0.01em",
               boxShadow: "0 4px 12px rgba(34, 197, 94, 0.15)",
               transition: "all 0.2s ease",
+              backgroundColor: "rgb(var(--neeto-ui-primary-500))",
+              color: "white",
+              border: "none",
             }}
+            size="large"
           />
 
-          {/* Features Grid with compact cards in a single row */}
+          {/* Enhanced Features Grid with NeetoUI icons */}
           <div
             style={{
               display: "grid",
@@ -131,7 +140,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
               margin: "3rem auto 0 auto",
             }}
           >
-            {/* Feature 1 - Compact styling */}
+            {/* Feature 1 - Enhanced with NeetoUI icon */}
             <div
               style={{
                 padding: "1.5rem 1rem",
@@ -152,9 +161,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
             >
               <div
                 style={{
-                  fontSize: "2rem",
                   marginBottom: "1rem",
-                  color: "#22C55E",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -164,7 +171,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
                   borderRadius: "12px",
                 }}
               >
-                ⚡
+                <Flash size={24} color="#22C55E" />
               </div>
               <h3
                 style={{
@@ -173,6 +180,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
                   marginBottom: "0.75rem",
                   color: darkMode ? "#f9fafb" : "#111827",
                   lineHeight: 1.2,
+                  textAlign: "center",
                 }}
               >
                 Instant Setup
@@ -186,6 +194,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
                   flex: 1,
                   display: "flex",
                   alignItems: "center",
+                  textAlign: "center",
                 }}
               >
                 Get a unique webhook endpoint immediately and start testing in
@@ -193,7 +202,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
               </p>
             </div>
 
-            {/* Feature 2 - Compact styling */}
+            {/* Feature 2 - Enhanced with NeetoUI icon */}
             <div
               style={{
                 padding: "1.5rem 1rem",
@@ -214,9 +223,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
             >
               <div
                 style={{
-                  fontSize: "2rem",
                   marginBottom: "1rem",
-                  color: "#3B82F6",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -226,7 +233,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
                   borderRadius: "12px",
                 }}
               >
-                📊
+                <ActivityLog size={24} color="#3B82F6" />
               </div>
               <h3
                 style={{
@@ -235,6 +242,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
                   marginBottom: "0.75rem",
                   color: darkMode ? "#f9fafb" : "#111827",
                   lineHeight: 1.2,
+                  textAlign: "center",
                 }}
               >
                 Real-time Monitoring
@@ -248,6 +256,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
                   flex: 1,
                   display: "flex",
                   alignItems: "center",
+                  textAlign: "center",
                 }}
               >
                 Watch requests arrive in real-time with detailed payload
@@ -255,7 +264,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
               </p>
             </div>
 
-            {/* Feature 3 - Compact styling */}
+            {/* Feature 3 - Enhanced with NeetoUI icon */}
             <div
               style={{
                 padding: "1.5rem 1rem",
@@ -276,9 +285,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
             >
               <div
                 style={{
-                  fontSize: "2rem",
                   marginBottom: "1rem",
-                  color: "#8B5CF6",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -288,7 +295,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
                   borderRadius: "12px",
                 }}
               >
-                🔧
+                <Settings size={24} color="#8B5CF6" />
               </div>
               <h3
                 style={{
@@ -297,6 +304,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
                   marginBottom: "0.75rem",
                   color: darkMode ? "#f9fafb" : "#111827",
                   lineHeight: 1.2,
+                  textAlign: "center",
                 }}
               >
                 Debug & Test
@@ -310,6 +318,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
                   flex: 1,
                   display: "flex",
                   alignItems: "center",
+                  textAlign: "center",
                 }}
               >
                 Perfect for debugging webhooks and testing API integrations.
@@ -319,7 +328,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
         </div>
       </main>
 
-      {/* Footer */}
+      {/* Enhanced Footer */}
       <footer
         style={{
           padding: "2rem",
@@ -336,6 +345,7 @@ const LandingPage = ({ darkMode, toggleDarkMode, onStartTesting }) => {
             fontSize: "0.875rem",
             color: darkMode ? "#9ca3af" : "#6b7280",
             margin: 0,
+            textAlign: "center",
           }}
         >
           Built with ❤️ using NeetoUI • A simple webhook testing tool
